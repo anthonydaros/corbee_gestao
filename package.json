@@ -1,6 +1,6 @@
 {
 	"name": "@devanthonymax/n8n-nodes-corbeegestao",
-	"version": "2.1.0",
+	"version": "2.2.1",
 	"description": "n8n community node for Corbee Gestão API integration - Complete business management solution",
 	"keywords": [
 		"n8n-community-node-package",
@@ -13,6 +13,10 @@
 		"notifications",
 		"operations",
 		"fgts",
+		"reference-data",
+		"banks",
+		"states",
+		"cities",
 		"api-integration"
 	],
 	"license": "MIT",

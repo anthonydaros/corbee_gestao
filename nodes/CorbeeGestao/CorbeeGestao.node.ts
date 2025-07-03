@@ -10,7 +10,7 @@ export class CorbeeGestao implements INodeType {
   description: INodeTypeDescription = {
     displayName: "Corbee Gestão",
     name: "corbeeGestao",
-    icon: "file:folder.svg",
+    icon: "file:corbee.svg",
     group: ["transform"],
     version: 1,
     description:
@@ -253,6 +253,80 @@ export class CorbeeGestao implements INodeType {
             description: "Send notification",
             action: "Send notification",
           },
+
+          // Reference Data Operations
+          {
+            name: "List Banks",
+            value: "listBanks",
+            description: "Get client banks list",
+            action: "List banks",
+          },
+          {
+            name: "Get Bank by ID",
+            value: "getBankById",
+            description: "Get specific bank by ID",
+            action: "Get bank by ID",
+          },
+          {
+            name: "List Agreements",
+            value: "listAgreements",
+            description: "Get agreements list",
+            action: "List agreements",
+          },
+          {
+            name: "Get Agreement by ID",
+            value: "getAgreementById",
+            description: "Get specific agreement by ID",
+            action: "Get agreement by ID",
+          },
+          {
+            name: "List States",
+            value: "listStates",
+            description: "List Brazilian states",
+            action: "List states",
+          },
+          {
+            name: "Get State by ID",
+            value: "getStateById",
+            description: "Get specific state by ID",
+            action: "Get state by ID",
+          },
+          {
+            name: "List Cities",
+            value: "listCities",
+            description: "List cities (optionally by state)",
+            action: "List cities",
+          },
+          {
+            name: "Get City by ID",
+            value: "getCityById",
+            description: "Get specific city by ID",
+            action: "Get city by ID",
+          },
+          {
+            name: "List Marital Status",
+            value: "listMaritalStatus",
+            description: "List marital status options",
+            action: "List marital status",
+          },
+          {
+            name: "List Client Receipt Types",
+            value: "listClientReceiptTypes",
+            description: "List client receipt types",
+            action: "List client receipt types",
+          },
+          {
+            name: "List Proposal Files (Alternative)",
+            value: "listProposalFilesAlt",
+            description: "Alternative method to list proposal files",
+            action: "List proposal files (alternative)",
+          },
+          {
+            name: "List Stores",
+            value: "listStores",
+            description: "List registered stores in the system",
+            action: "List stores",
+          },
         ],
         default: "createBroker",
       },
@@ -277,6 +351,7 @@ export class CorbeeGestao implements INodeType {
               "getBrokerObservations",
               "setPortabilityBalance",
               "listProposalFiles",
+              "listProposalFilesAlt",
               "downloadProposalFile",
             ],
           },
@@ -536,6 +611,72 @@ export class CorbeeGestao implements INodeType {
         },
         default: "",
         description: "ID of the specific user or role (if not sending to all)",
+      },
+
+      // Reference Data ID fields
+      {
+        displayName: "Bank ID",
+        name: "bankIdRef",
+        type: "string",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["getBankById"],
+          },
+        },
+        default: "",
+        description: "The ID of the bank to retrieve",
+      },
+      {
+        displayName: "Agreement ID",
+        name: "agreementId",
+        type: "string",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["getAgreementById"],
+          },
+        },
+        default: "",
+        description: "The ID of the agreement to retrieve",
+      },
+      {
+        displayName: "State ID",
+        name: "stateId",
+        type: "string",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["getStateById"],
+          },
+        },
+        default: "",
+        description: "The ID of the state to retrieve",
+      },
+      {
+        displayName: "State Filter",
+        name: "stateFilter",
+        type: "string",
+        displayOptions: {
+          show: {
+            operation: ["listCities"],
+          },
+        },
+        default: "",
+        description: "State ID to filter cities (optional)",
+      },
+      {
+        displayName: "City ID",
+        name: "cityId",
+        type: "string",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["getCityById"],
+          },
+        },
+        default: "",
+        description: "The ID of the city to retrieve",
       },
 
       // Broker ID field
@@ -1624,6 +1765,106 @@ export class CorbeeGestao implements INodeType {
             url: `${baseUrl}/api/v2/notificacoes`,
             headers,
             body: notificationData,
+            json: true,
+          });
+
+          // Reference Data Operations
+        } else if (operation === "listBanks") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/bancos`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "getBankById") {
+          const bankIdRef = this.getNodeParameter("bankIdRef", itemIndex) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/bancos/${bankIdRef}`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "listAgreements") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/convenios`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "getAgreementById") {
+          const agreementId = this.getNodeParameter("agreementId", itemIndex) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/convenios/${agreementId}`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "listStates") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/estados`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "getStateById") {
+          const stateId = this.getNodeParameter("stateId", itemIndex) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/estados/${stateId}`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "listCities") {
+          const stateFilter = this.getNodeParameter("stateFilter", itemIndex, "") as string;
+          let url = `${baseUrl}/api/v2/cidades`;
+          
+          const queryParams: any = {};
+          if (stateFilter) {
+            queryParams.estado = stateFilter;
+          }
+          
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url,
+            headers,
+            qs: queryParams,
+            json: true,
+          });
+        } else if (operation === "getCityById") {
+          const cityId = this.getNodeParameter("cityId", itemIndex) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/cidades/${cityId}`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "listMaritalStatus") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/estados-civis`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "listClientReceiptTypes") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/tipos-recebimentos-clientes`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "listProposalFilesAlt") {
+          const proposalId = this.getNodeParameter("proposalId", itemIndex) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/proposta/${proposalId}/arquivos-alt`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "listStores") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/lojas`,
+            headers,
             json: true,
           });
         }

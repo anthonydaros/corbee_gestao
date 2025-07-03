@@ -79,6 +79,20 @@ All operations automatically handle JWT authentication using the configured cred
 - `listNotifications` - List notifications
 - `sendNotification` - Send notification (to all users, specific user, or role)
 
+### Reference Data Operations
+- `listBanks` - Get client banks list
+- `getBankById` - Get specific bank by ID
+- `listAgreements` - Get agreements list
+- `getAgreementById` - Get specific agreement by ID
+- `listStates` - List Brazilian states
+- `getStateById` - Get specific state by ID
+- `listCities` - List cities (optionally by state)
+- `getCityById` - Get specific city by ID
+- `listMaritalStatus` - List marital status options
+- `listClientReceiptTypes` - List client receipt types
+- `listProposalFilesAlt` - Alternative method to list proposal files
+- `listStores` - List registered stores in the system
+
 ## Configuration
 
 ### Credentials Setup
@@ -118,6 +132,12 @@ All operations automatically handle JWT authentication using the configured cred
 1. Use "Send Notification" to notify users
 2. Choose recipient type: All Users, Specific User, or Role
 3. Provide title and message content
+
+### Work with Reference Data
+1. Use "List States" and "List Cities" for address forms
+2. Use "List Banks" and "List Agreements" for financial setup
+3. Use "List Marital Status" for client registration
+4. Use "List Stores" for store management
 
 ## API Documentation
 
