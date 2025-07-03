@@ -10,6 +10,7 @@ export class CorbeeGestaoUsuario implements INodeType {
   description: INodeTypeDescription = {
     displayName: "Corbee Gestão Usuario",
     name: "corbeeGestaoUsuario",
+    icon: "file:archive.svg",
     group: ["transform"],
     version: 1,
     description: "Corbee Gestão API - User and Broker Operations",

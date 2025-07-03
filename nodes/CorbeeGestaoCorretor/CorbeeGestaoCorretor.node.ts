@@ -10,6 +10,7 @@ export class CorbeeGestaoCorretor implements INodeType {
   description: INodeTypeDescription = {
     displayName: "Corbee Gestão Corretor",
     name: "corbeeGestaoCorretor",
+    icon: "file:archive.svg",
     group: ["transform"],
     version: 1,
     description: "Corbee Gestão API - Broker Operations",
