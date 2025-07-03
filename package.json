@@ -1,0 +1,58 @@
+{
+	"name": "n8n-nodes-corbee-gestao",
+	"version": "0.1.0",
+	"description": "n8n community node for Corbee Gestão API integration",
+	"keywords": [
+		"n8n-community-node-package"
+	],
+	"license": "MIT",
+	"homepage": "https://github.com/username/n8n-nodes-corbee-gestao",
+	"author": {
+		"name": "Your Name",
+		"email": "your.email@example.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/username/n8n-nodes-corbee-gestao.git"
+	},
+	"engines": {
+		"node": ">=18.10",
+		"pnpm": ">=8.6"
+	},
+	"packageManager": "pnpm@8.6.2",
+	"main": "index.js",
+	"scripts": {
+		"build": "tsc && gulp build:icons",
+		"dev": "tsc --watch",
+		"format": "prettier nodes credentials --write",
+		"lint": "eslint nodes credentials package.json",
+		"lintfix": "eslint nodes credentials package.json --fix",
+		"prepublishOnly": "pnpm run build && pnpm run lint -s"
+	},
+	"files": [
+		"dist"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"credentials": [
+			"dist/credentials/CorbeeGestaoApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/CorbeeGestaoUsuario/CorbeeGestaoUsuario.node.js",
+			"dist/nodes/CorbeeGestaoCorretor/CorbeeGestaoCorretor.node.js"
+		]
+	},
+	"devDependencies": {
+		"@types/node": "^18.16.16",
+		"@typescript-eslint/parser": "^5.45.0",
+		"eslint": "^8.29.0",
+		"eslint-plugin-n8n-nodes-base": "^1.11.0",
+		"gulp": "^4.0.2",
+		"n8n-workflow": "^1.0.0",
+		"prettier": "^2.7.1",
+		"typescript": "^4.8.4"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}

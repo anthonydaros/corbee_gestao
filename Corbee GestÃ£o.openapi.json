@@ -1,0 +1,6392 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Corbee Gestão",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "Autenticação"
+    },
+    {
+      "name": "Proposta"
+    },
+    {
+      "name": "Corretores"
+    },
+    {
+      "name": "Produtos"
+    },
+    {
+      "name": "Pendências"
+    },
+    {
+      "name": "Financeiro"
+    },
+    {
+      "name": "Usuário"
+    },
+    {
+      "name": "Configurações"
+    },
+    {
+      "name": "Comissionamento"
+    },
+    {
+      "name": "Operações"
+    },
+    {
+      "name": "Notificações"
+    },
+    {
+      "name": "Relatorios"
+    },
+    {
+      "name": "Telemarketing"
+    }
+  ],
+  "paths": {
+    "/api/v2/login": {
+      "post": {
+        "summary": "Autenticação Usuário",
+        "deprecated": false,
+        "description": "Utilize este Endpoint para gerar o Token de acesso a API.\nO login e senha são sempre os do usuário do SISTEMA INTERNO.",
+        "tags": [
+          "Autenticação"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "login": {
+                    "type": "string"
+                  },
+                  "senha": {
+                    "type": "string"
+                  },
+                  "type_user": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "login",
+                  "senha",
+                  "type_user"
+                ]
+              },
+              "example": {
+                "login": "{{usuarioWebcred}}",
+                "senha": "{{senhaUsuarioWebcred}}",
+                "type_user": "interno"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "jwt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "jwt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "data"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Sucesso",
+                    "value": {
+                      "message": "Login realizado com sucesso!",
+                      "data": {
+                        "jwt": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvaG9tb2xvZy5jb3JiZWUuY29tLmJyIiwiaWF0IjoxNzE4MDQzMzQ1LCJleHAiOjE3MTgwODY1NDUsImRhdGEiOnsiVHlwZSI6ImludGVybmFsIiwiSWQiOiIxIiwiTm9tZVVzdWFyaW8iOiJhZG1pbiJ9fQ.Skjlvi1slOAXxPynccU4jK4c_Tg4AJvhTFwl4ma8Mio"
+                      }
+                    }
+                  },
+                  "2": {
+                    "summary": "Exceção",
+                    "value": {
+                      "status": false,
+                      "message": "Usuário ou senha inválidos.",
+                      "error": "Unauthorized"
+                    }
+                  },
+                  "3": {
+                    "summary": "Exceção",
+                    "value": {
+                      "status": false,
+                      "message": "IP bloqueado para este usuário.",
+                      "error": "Unauthorized"
+                    }
+                  },
+                  "4": {
+                    "summary": "Exceção",
+                    "value": {
+                      "status": false,
+                      "message": "IP bloqueado por excesso de tentativas inválidas.",
+                      "error": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v2/proposal/register": {
+      "post": {
+        "summary": "Cadastrar Proposta",
+        "deprecated": false,
+        "description": "Se o usuário logado na API for do tipo \"interno\", então será obrigatório informar o campo \"Corretor\", caso contrário, se o usuário logado for um corretor a proposta será atribuída diretamente a ele",
+        "operationId": "cadastro-proposta",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Corretor": {
+                    "type": "string"
+                  },
+                  "Cliente": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "CPF": {
+                          "type": "string"
+                        },
+                        "Nome": {
+                          "type": "string"
+                        },
+                        "DtNascimento": {
+                          "type": "string"
+                        },
+                        "RG": {
+                          "type": "string"
+                        },
+                        "OrgExp": {
+                          "type": "string"
+                        },
+                        "DtEmissao": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "NomeMae": {
+                          "type": "string"
+                        },
+                        "NomePai": {
+                          "type": "string"
+                        },
+                        "End": {
+                          "type": "string"
+                        },
+                        "Numero": {
+                          "type": "string"
+                        },
+                        "Complemento": {
+                          "type": "string"
+                        },
+                        "Bairro": {
+                          "type": "string"
+                        },
+                        "Cidade": {
+                          "type": "string"
+                        },
+                        "UF": {
+                          "type": "string"
+                        },
+                        "CEP": {
+                          "type": "string"
+                        },
+                        "Tel": {
+                          "type": "string"
+                        },
+                        "Matricula": {
+                          "type": "string"
+                        },
+                        "TipoBeneficio": {
+                          "type": "string"
+                        },
+                        "EstadoBeneficio": {
+                          "type": "string"
+                        },
+                        "RepresentanteCpf": {
+                          "type": "string"
+                        },
+                        "RepresentanteNome": {
+                          "type": "string"
+                        },
+                        "DadosBancarios": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "TipoRecebimento": {
+                                "type": "string"
+                              },
+                              "BancoRecebimento": {
+                                "type": "string"
+                              },
+                              "AgenciaRecebimento": {
+                                "type": "string"
+                              },
+                              "ContaRecebimento": {
+                                "type": "string"
+                              },
+                              "ContaDigito": {
+                                "type": "string"
+                              },
+                              "AgenciaDigito": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "Operacao": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "Banco": {
+                          "type": "integer"
+                        },
+                        "Convenio": {
+                          "type": "integer"
+                        },
+                        "Produto": {
+                          "type": "integer"
+                        },
+                        "QtdeParcelas": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "Proposta": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "CodPropostaBanco": {
+                          "type": "string"
+                        },
+                        "DataProposta": {
+                          "type": "string"
+                        },
+                        "formalizacao": {
+                          "type": "string"
+                        },
+                        "statusfisico": {
+                          "type": "string"
+                        },
+                        "ValorBruto": {
+                          "type": "string"
+                        },
+                        "ValorLiquido": {
+                          "type": "string"
+                        },
+                        "ValorParcela": {
+                          "type": "string"
+                        },
+                        "midia": {
+                          "type": "string"
+                        },
+                        "Loja": {
+                          "type": "integer"
+                        },
+                        "SaquesFGTS": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "valor": {
+                                "type": "integer"
+                              },
+                              "data": {
+                                "type": "string"
+                              },
+                              "valor_maximo": {
+                                "type": "integer"
+                              }
+                            },
+                            "required": [
+                              "valor",
+                              "data",
+                              "valor_maximo"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "automaticDigitation": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "Corretor",
+                  "Cliente",
+                  "Operacao",
+                  "Proposta",
+                  "automaticDigitation"
+                ]
+              },
+              "example": {
+                "Corretor": "8",
+                "Cliente": [
+                  {
+                    "CPF": "67132173030",
+                    "Nome": "MARTA RODRIGUES DA SILVA",
+                    "DtNascimento": "1995-06-30",
+                    "RG": "21375642",
+                    "OrgExp": "Detran",
+                    "DtEmissao": "2019-01-10",
+                    "email": "marta_rodrigues@hotmail.com",
+                    "NomeMae": "MARCELA RODRIGUES DA SILVA",
+                    "NomePai": "ROBERTO PAIVA DA SILVA",
+                    "End": "Rua Peixoto Gomide",
+                    "Numero": "221",
+                    "Complemento": "AP 44",
+                    "Bairro": "Jardim Paulista",
+                    "Cidade": "Sao Paulo",
+                    "UF": "SP",
+                    "CEP": "01409001",
+                    "Tel": "(11)99241-4032",
+                    "Matricula": "NUMEROMATRICULA",
+                    "TipoBeneficio": "01",
+                    "EstadoBeneficio": "TO",
+                    "RepresentanteCpf": "41814469803",
+                    "RepresentanteNome": "NOME DO REPRESENTANTE",
+                    "DadosBancarios": [
+                      {
+                        "TipoRecebimento": "OP",
+                        "BancoRecebimento": "241",
+                        "AgenciaRecebimento": "05791",
+                        "ContaRecebimento": "58247",
+                        "ContaDigito": "8",
+                        "AgenciaDigito": "2"
+                      }
+                    ]
+                  }
+                ],
+                "Operacao": [
+                  {
+                    "Banco": 14,
+                    "Convenio": 2,
+                    "Produto": 26,
+                    "QtdeParcelas": 6
+                  }
+                ],
+                "Proposta": [
+                  {
+                    "CodPropostaBanco": "976",
+                    "DataProposta": "2021-08-30",
+                    "formalizacao": "eletronico",
+                    "statusfisico": "PM",
+                    "ValorBruto": "1000.00",
+                    "ValorLiquido": "500.00",
+                    "ValorParcela": "50.00",
+                    "midia": "Ads",
+                    "Loja": 1,
+                    "SaquesFGTS": [
+                      {
+                        "valor": 1000,
+                        "data": "2022-06-30",
+                        "valor_maximo": 2000
+                      },
+                      {
+                        "valor": 1200,
+                        "data": "2023-06-30",
+                        "valor_maximo": 2000
+                      }
+                    ]
+                  }
+                ],
+                "automaticDigitation": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/{codigo_proposta}/automatic/typeinthebank": {
+      "post": {
+        "summary": "Digitar Proposta no Banco",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/document/": {
+      "post": {
+        "summary": "Enviar Documentos da Proposta",
+        "deprecated": false,
+        "description": "Envia docs para a proposta no Gestão.\nEnvia como BASE64 seguindo o exemplo:\n\nPHP:\n$encodeFile = base64_encode($file);",
+        "operationId": "enviar-documentos-proposta",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "CodProposta": {
+                    "type": "integer"
+                  },
+                  "arquivos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "arquivo": {
+                          "type": "string"
+                        },
+                        "nomeArquivo": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "arquivo",
+                        "nomeArquivo"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "CodProposta",
+                  "arquivos"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/observacoes/corretor/{codigo_proposta}": {
+      "post": {
+        "summary": "Corretor Inserir Observação",
+        "deprecated": false,
+        "description": "Para poder inserir observações de corretor na proposta, é necessário passar no body um JSON com a observação e na URI o codigo da proposta.",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "observacao": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "observacao"
+                ]
+              },
+              "example": {
+                "observacao": "Corpo da Observacao"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "summary": "Observações do Corretor na Proposta",
+        "deprecated": false,
+        "description": "Utilizada para retornar as Observações Inseridas pelo Corretor na Proposta.\nÉ necessário passar o Codigo da Proposta no Gestão.",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/filter": {
+      "get": {
+        "summary": "Buscar Proposta",
+        "deprecated": false,
+        "description": "Utilize esse Endpoint para efetuar filtros de busca de proposta.",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [
+          {
+            "name": "CodProposta",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "{{codProposta}}",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "codPropostaBanco",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "string",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cpf",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "00337779007",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dataPropostaInicio",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "0000-00-00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dataPropostaFim",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "0000-00-00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "statusProposta",
+            "in": "query",
+            "description": "P - Em Analise\nL  - Averbada\nPG - Pago pelo Banco\nC - Cancelada\nN - Negada\nPIB - Pago Incompleto Banco\nE - Estornada\n\nÉ possível enviar vários Status Proposta:",
+            "required": false,
+            "example": "L,P,PG",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "P",
+                "L",
+                "PG",
+                "C",
+                "N",
+                "PIB",
+                "E"
+              ]
+            }
+          },
+          {
+            "name": "dataDigitacao",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "0000-00-00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dataProposta",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "0000-00-00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "exibirParcelas",
+            "in": "query",
+            "description": "Caso seja enviado true, as propostas que representam parcelas terão o código da proposta pai no retorno",
+            "required": false,
+            "example": "false",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "data": [
+                    {
+                      "Codigo_Proposta_Webcred": 30729,
+                      "Codigo_Proposta_Banco": "187353858",
+                      "hash": null,
+                      "DataDigitacao": "",
+                      "Codigo_Corretor": 12,
+                      "Nome_Corretor": "RIAN",
+                      "Data_Proposta": "05/08/2024",
+                      "Desc_Status_Proposta": "Pago pelo Banco",
+                      "StatusBanco": null,
+                      "CorStatusBanco": null,
+                      "StatusProposta": "PG",
+                      "StatusFisico": "PM",
+                      "FormatoFisico": "eletronico",
+                      "proposta_pai": null,
+                      "Corretor_Indicado": null,
+                      "CPF_Cliente": "08540592533",
+                      "Nome_Cliente": "CLEONÃ¢NCIO DE SOUZA SANTOS",
+                      "Data_Averbacao": "06/08/2024",
+                      "Data_Pagamento_Banco": "06/08/2024",
+                      "Data_Digitacao_Banco": "",
+                      "StatusDigitacao": null,
+                      "StatusVerificacao": null,
+                      "Status_Pagamento_Corretor": null,
+                      "StatusPagCorretor": null,
+                      "Data_Pagamento_Corretor": "",
+                      "Valor_Bruto": "R$ 163,96",
+                      "Valor_Liquido": "R$ 109,99",
+                      "Valor_Producao": "R$ 163,96",
+                      "Valor_Parcelas": "R$ 2,00",
+                      "Comissao_Empresa": "R$ 1,64",
+                      "BonusEmpresa": "R$ 0,00",
+                      "Perc_Comissao_Empresa": "1,00%",
+                      "Perc_Bonus_Empresa": "0,00%",
+                      "Comissao_Corretor": "R$ 0,82",
+                      "Bonus_Corretor": "R$ 0,00",
+                      "Perc_Comissao_Corretor": "0,50%",
+                      "Perc_Bonus_Corretor": "0,00%",
+                      "Operacao": "FISICO FGTS Tabela FGTS todos bancos 2X",
+                      "Convenio_id": 2,
+                      "Incidencia": "Vl. Bruto"
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/log/{cod_proposta}": {
+      "get": {
+        "summary": "Log Proposta",
+        "deprecated": false,
+        "description": "Obter os Logs de Ações na Proposta.",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/all_proposal_status": {
+      "get": {
+        "summary": "Status Propostas - Listagem",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "data": [
+                    {
+                      "status": "P",
+                      "description": "Em Analise"
+                    },
+                    {
+                      "status": "L",
+                      "description": "Averbada"
+                    },
+                    {
+                      "status": "PG",
+                      "description": "Pago pelo Banco"
+                    },
+                    {
+                      "status": "PIB",
+                      "description": "Pago Incompleto Banco"
+                    },
+                    {
+                      "status": "C",
+                      "description": "Cancelada"
+                    },
+                    {
+                      "status": "N",
+                      "description": "Negada"
+                    },
+                    {
+                      "status": "E",
+                      "description": "Estornada"
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/status_banco": {
+      "get": {
+        "summary": "Status Banco - Listagem",
+        "deprecated": false,
+        "description": "",
+        "operationId": "status-banco",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "data": [
+                    {
+                      "id": 1,
+                      "descricao": "Aguardando aceite"
+                    },
+                    {
+                      "id": 2,
+                      "descricao": "Aguardando averbacao"
+                    },
+                    {
+                      "id": 3,
+                      "descricao": "Averbada"
+                    },
+                    {
+                      "id": 4,
+                      "descricao": "Pendente"
+                    },
+                    {
+                      "id": 5,
+                      "descricao": "Aguardando aprovacao"
+                    },
+                    {
+                      "id": 6,
+                      "descricao": "Em analise"
+                    },
+                    {
+                      "id": 7,
+                      "descricao": "Aprovado"
+                    },
+                    {
+                      "id": 8,
+                      "descricao": "Não foi liberado"
+                    },
+                    {
+                      "id": 9,
+                      "descricao": "Cancelada"
+                    },
+                    {
+                      "id": 10,
+                      "descricao": "Aguardando documentacao"
+                    },
+                    {
+                      "id": 11,
+                      "descricao": "Cadastro"
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/alter/{CodProposal}/status_proposal": {
+      "put": {
+        "summary": "Atualizar status da proposta",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "new_status": {
+                    "type": "string"
+                  },
+                  "status_date": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "new_status",
+                  "status_date"
+                ]
+              },
+              "example": {
+                "new_status": "L",
+                "status_date": "2024-08-07"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/{CodProposal}/alter_status_banco": {
+      "put": {
+        "summary": "Atualizar status  banco",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "new_status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "new_status"
+                ]
+              },
+              "example": {
+                "new_status": "3"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/erp/api/v2/proposal/{codProposta}/altPMT": {
+      "put": {
+        "summary": "Alterar a PMT da Proposta",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "PMT": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "PMT"
+                ]
+              },
+              "example": {
+                "PMT": "5"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/erp/api/v2/proposal/{codProposta}/retirarPMT": {
+      "put": {
+        "summary": "Remover PMT da Proposta",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/{codigo_proposta}/portabilitybalance": {
+      "put": {
+        "summary": "Saldo Portabilidade",
+        "deprecated": false,
+        "description": "Utilize esse endPoint para informar o saldo portado (recebido do banco).",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "bankBalance": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "bankBalance"
+                ]
+              },
+              "example": {
+                "bankBalance": "1.200,00"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/cancellation/typescancellation": {
+      "get": {
+        "summary": "Tipos de Cancelamento",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "data": [
+                    {
+                      "id": 1,
+                      "descricao": "Limite de idade excedido",
+                      "status": 1
+                    },
+                    {
+                      "id": 2,
+                      "descricao": "Cliente Desistiu",
+                      "status": 1
+                    },
+                    {
+                      "id": 3,
+                      "descricao": "Refeito por outro banco",
+                      "status": 1
+                    },
+                    {
+                      "id": 4,
+                      "descricao": "Saldo devedor maior",
+                      "status": 1
+                    },
+                    {
+                      "id": 5,
+                      "descricao": "Sem margem",
+                      "status": 1
+                    },
+                    {
+                      "id": 6,
+                      "descricao": "Margem negativa",
+                      "status": 1
+                    },
+                    {
+                      "id": 7,
+                      "descricao": "Benefício/Cargo não permitido",
+                      "status": 1
+                    },
+                    {
+                      "id": 8,
+                      "descricao": "POSSUI 6 OU 8 EMPRESTIMOS",
+                      "status": 1
+                    },
+                    {
+                      "id": 9,
+                      "descricao": "Cliente insatisfeito com banco",
+                      "status": 1
+                    },
+                    {
+                      "id": 10,
+                      "descricao": "Não retirou O.P",
+                      "status": 1
+                    },
+                    {
+                      "id": 11,
+                      "descricao": "Valor lib. inferior permitido",
+                      "status": 1
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/document/{cod_proposta}": {
+      "get": {
+        "summary": "Listagem arquivos proposta",
+        "deprecated": false,
+        "description": "Lista os arquivo da proposta",
+        "operationId": "listagem-arquivos-proposta",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [
+          {
+            "name": "cod_proposta",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJpYXQiOjE3NDQxMzc2MzksImV4cCI6MTc0NDE4MDgzOSwiZGF0YSI6eyJUeXBlIjoiaW50ZXJuYWwiLCJJZCI6MSwiTm9tZVVzdWFyaW8iOiJhZG1pbiIsIlN0b3JlQ29kIjotMX19.fZMMS8R_q9KkLdneq1X_0tZ2QCU2_xLm-q1e-scUIaY",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "application/json",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "data": [
+                    {
+                      "Arquivo": "WhatsAppImage2025-03-05at15.20.36_20250402_025344_323483_20250407_180506_475805.jpeg",
+                      "LastModifiedFormated": "07/04/2025 18:05:07",
+                      "SizeFormated": "104.71 KB",
+                      "FileKey": "gestaocrm/propostas/50126/WhatsAppImage2025-03-05at15.20.36_20250402_025344_323483_20250407_180506_475805.jpeg",
+                      "Size": "107228",
+                      "ContentType": "image/jpeg"
+                    },
+                    {
+                      "Arquivo": "relatorio-20-03-2025_07-50-47_20250402_025343_115760.xls",
+                      "LastModifiedFormated": "02/04/2025 02:53:45",
+                      "SizeFormated": "35.56 KB",
+                      "FileKey": "gestaocrm/propostas/50126/relatorio-20-03-2025_07-50-47_20250402_025343_115760.xls",
+                      "Size": "36412",
+                      "ContentType": "application/vnd.ms-excel"
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/document/download/{cod_proposta}": {
+      "get": {
+        "summary": "Download Arquivo Proposta",
+        "deprecated": false,
+        "description": "Download do arquivo em base64",
+        "operationId": "downalod-file-proposal",
+        "tags": [
+          "Proposta"
+        ],
+        "parameters": [
+          {
+            "name": "cod_proposta",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fileKey",
+            "in": "query",
+            "description": "você pode buscar este parametro em https://docs.gestao.corbee.com.br/listagem-arquivos-proposta",
+            "required": true,
+            "example": "{fileKey}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJpYXQiOjE3NDQxMzc2MzksImV4cCI6MTc0NDE4MDgzOSwiZGF0YSI6eyJUeXBlIjoiaW50ZXJuYWwiLCJJZCI6MSwiTm9tZVVzdWFyaW8iOiJhZG1pbiIsIlN0b3JlQ29kIjotMX19.fZMMS8R_q9KkLdneq1X_0tZ2QCU2_xLm-q1e-scUIaY",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Cookie",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "PHPSESSID=lv50plr2kc63dfo1qqrj8qb4i3",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Exceção",
+                    "value": {
+                      "status": false,
+                      "message": "Arquivo não encontrado no disco virtual.",
+                      "error": "Ocorreu um erro na requisicao. Por favor verifique e tente novamente.",
+                      "data": []
+                    }
+                  },
+                  "2": {
+                    "summary": "Sucesso",
+                    "value": {
+                      "status": true,
+                      "filename": "WhatsAppImage2025-03-05at15.20.36_20250402_025344_323483_20250407_180506_475805.jpeg",
+                      "contentType": "image/jpeg",
+                      "data": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wgARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAj/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIQAxAAAAGVAf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAQUCf//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQMBAT8Bf//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQIBAT8Bf//EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEABj8Cf//EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAT8hf//aAAwDAQACAAMAAAAQ8//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQMBAT8Qf//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQIBAT8Qf//EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAT8Qf//Z"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/broker": {
+      "post": {
+        "summary": "Cadastro Corretores",
+        "deprecated": false,
+        "description": "",
+        "operationId": "new-broker",
+        "tags": [
+          "Corretores"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "login": {
+                    "type": "string"
+                  },
+                  "cpf": {
+                    "type": "string"
+                  },
+                  "cnpj": {
+                    "type": "string",
+                    "description": "Requerido para cadastro de corretores Pessoa Jurídica (PJ)."
+                  },
+                  "razaoSocial": {
+                    "type": "string",
+                    "description": "Requerido para cadastro de corretores Pessoa Jurídica (PJ)."
+                  },
+                  "tipoCorretor": {
+                    "type": "integer",
+                    "enum": [
+                      1,
+                      2,
+                      3
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "A",
+                      "I"
+                    ]
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "telefone": {
+                    "type": "string"
+                  },
+                  "nome": {
+                    "type": "string"
+                  },
+                  "dtNascimento": {
+                    "type": "string",
+                    "description": "Formato: 'AAAA-MM-DD'"
+                  },
+                  "loja": {
+                    "type": "integer",
+                    "description": "Pode ser obitido no endpoint de listagem de lojas:\nhttps://docs.gestao.corbee.com.br/lojas"
+                  },
+                  "logradouro": {
+                    "type": "string",
+                    "description": "Nome da rua, avenida ou via do endereço."
+                  },
+                  "numero": {
+                    "type": "string"
+                  },
+                  "bairro": {
+                    "type": "string"
+                  },
+                  "cidade": {
+                    "type": "integer",
+                    "description": "Pode ser obitido no endpoint de listagem de cidades:\nhttps://docs.gestao.corbee.com.br/cidades"
+                  },
+                  "estado": {
+                    "type": "integer",
+                    "description": "Pode ser obitido no endpoint de listagem de estados:\nhttps://docs.gestao.corbee.com.br/estados"
+                  },
+                  "cep": {
+                    "type": "string"
+                  },
+                  "gerente": {
+                    "type": "integer",
+                    "description": "Pode ser obitido no endpoint de listagem de gerentes:\nhttps://docs.gestao.corbee.com.br/gerentes"
+                  },
+                  "idCentroCusto": {
+                    "type": "integer",
+                    "description": "Pode ser obitido no endpoint de listagem de centro de custos:\nhttps://docs.gestao.corbee.com.br/centro-de-custos"
+                  },
+                  "idGrupoComissionamento": {
+                    "type": "integer",
+                    "description": "Pode ser obitido no endpoint de listagem de grupo de comissionamento:\nhttps://docs.gestao.corbee.com.br/grupos-de-comissionamento"
+                  },
+                  "recebimento": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "tipo": {
+                          "type": "string",
+                          "enum": [
+                            "cc",
+                            "cp",
+                            "dinheiro",
+                            "cheque",
+                            "pix"
+                          ]
+                        },
+                        "nomeFavorecido": {
+                          "type": "string"
+                        },
+                        "documentoFavorecido": {
+                          "type": "string",
+                          "description": "CPF ou CNPJ"
+                        },
+                        "banco": {
+                          "type": "string"
+                        },
+                        "agencia": {
+                          "type": "string"
+                        },
+                        "conta": {
+                          "type": "string"
+                        },
+                        "chavePix": {
+                          "type": "string",
+                          "description": "Obrigarória se o tipo de recebimento for 'pix'"
+                        },
+                        "tipoChavePix": {
+                          "type": "string",
+                          "enum": [
+                            "cpf",
+                            "cnpj",
+                            "celular",
+                            "email",
+                            "aleatoria"
+                          ],
+                          "description": "Obrigarória se o tipo de recebimento for 'pix'"
+                        }
+                      },
+                      "required": [
+                        "tipo",
+                        "documentoFavorecido"
+                      ]
+                    }
+                  },
+                  "permissoes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "cadastroPropostaAreaCorretor": {
+                          "type": "boolean"
+                        },
+                        "cadastroPropostaSimplificado": {
+                          "type": "boolean"
+                        },
+                        "cadastroRefinanciamento": {
+                          "type": "boolean"
+                        },
+                        "cadastroPropostaFGTS": {
+                          "type": "boolean"
+                        },
+                        "visualizarComissao": {
+                          "type": "boolean"
+                        },
+                        "exibirBonus": {
+                          "type": "boolean"
+                        },
+                        "exibirStatusBanco": {
+                          "type": "boolean"
+                        },
+                        "abrirChamados": {
+                          "type": "boolean"
+                        },
+                        "digitacaoAutomaticaBanco": {
+                          "type": "boolean"
+                        },
+                        "bloqueioPagamentos": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "pendenciaQuantidade": {
+                                "type": "boolean"
+                              },
+                              "pendenciaDias": {
+                                "type": "boolean"
+                              },
+                              "fisicoQuantidade": {
+                                "type": "boolean"
+                              },
+                              "fisicoDias": {
+                                "type": "boolean"
+                              },
+                              "pagarSemFisico": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "pendenciaQuantidade",
+                              "pendenciaDias",
+                              "fisicoQuantidade",
+                              "fisicoDias",
+                              "pagarSemFisico"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "cadastroRefinanciamento",
+                        "cadastroPropostaFGTS",
+                        "visualizarComissao",
+                        "exibirBonus",
+                        "exibirStatusBanco",
+                        "abrirChamados",
+                        "digitacaoAutomaticaBanco",
+                        "cadastroPropostaAreaCorretor",
+                        "cadastroPropostaSimplificado",
+                        "bloqueioPagamentos"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "login",
+                  "cpf",
+                  "tipoCorretor",
+                  "email",
+                  "telefone",
+                  "nome",
+                  "dtNascimento",
+                  "loja",
+                  "logradouro",
+                  "numero",
+                  "bairro",
+                  "cidade",
+                  "estado",
+                  "cep",
+                  "gerente",
+                  "idCentroCusto",
+                  "recebimento",
+                  "permissoes"
+                ]
+              },
+              "example": {
+                "login": "teste05",
+                "cpf": "13122343365",
+                "cnpj": "",
+                "razaoSocial": "",
+                "tipoCorretor": 1,
+                "status": "A",
+                "email": "email@gamil.com",
+                "telefone": "(11)98776-5432",
+                "nome": "Corretor Teste",
+                "dtNascimento": "1999-10-23",
+                "loja": 1,
+                "logradouro": "Rua teste",
+                "numero": "44",
+                "bairro": "Centro",
+                "cidade": 11791,
+                "estado": 21,
+                "cep": "01404001",
+                "gerente": 2,
+                "idCentroCusto": 1,
+                "idGrupoComissionamento": 3,
+                "recebimento": [
+                  {
+                    "tipo": "cc",
+                    "nomeFavorecido": "Corretor Teste",
+                    "documentoFavorecido": "13122343365",
+                    "banco": "001",
+                    "agencia": "1234",
+                    "conta": "12345",
+                    "tipoChavePix": "cpf",
+                    "chavePix": "13122343365"
+                  }
+                ],
+                "permissoes": [
+                  {
+                    "cadastroPropostaAreaCorretor": true,
+                    "cadastroPropostaSimplificado": false,
+                    "cadastroRefinanciamento": false,
+                    "cadastroPropostaFGTS": false,
+                    "visualizarComissao": false,
+                    "exibirBonus": false,
+                    "exibirStatusBanco": false,
+                    "abrirChamados": false,
+                    "digitacaoAutomaticaBanco": false,
+                    "bloqueioPagamentos": [
+                      {
+                        "pendenciaQuantidade": true,
+                        "pendenciaDias": true,
+                        "fisicoQuantidade": true,
+                        "fisicoDias": true,
+                        "pagarSemFisico": false
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": "sucesso",
+                  "message": "Corretor cadastrado com sucesso.",
+                  "data": {
+                    "codigo": 869,
+                    "nome": "Corretor Teste",
+                    "login": "teste05",
+                    "senha": "A senha inicial corresponde ao CPF ou CNPJ (apenas números). No primeiro acesso, será obrigatória a troca dessa senha",
+                    "ticket": ""
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/broker/{id_corretor}": {
+      "put": {
+        "summary": "Atualização Corretores",
+        "deprecated": false,
+        "description": "",
+        "operationId": "update-broker",
+        "tags": [
+          "Corretores"
+        ],
+        "parameters": [
+          {
+            "name": "id_corretor",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "login": {
+                    "type": "string"
+                  },
+                  "cpf": {
+                    "type": "string"
+                  },
+                  "cnpj": {
+                    "type": "string",
+                    "description": "Requerido para atualização de corretores Pessoa Jurídica (PJ)."
+                  },
+                  "razaoSocial": {
+                    "type": "string",
+                    "description": "Requisito para atualização de corretores Pessoa Jurídica (PJ)."
+                  },
+                  "tipoCorretor": {
+                    "type": "integer",
+                    "enum": [
+                      1,
+                      2,
+                      3
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "A",
+                      "I"
+                    ]
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "telefone": {
+                    "type": "string"
+                  },
+                  "nome": {
+                    "type": "string"
+                  },
+                  "dtNascimento": {
+                    "type": "string",
+                    "description": "Formato: 'AAAA-MM-DD'"
+                  },
+                  "loja": {
+                    "type": "integer",
+                    "description": "Pode ser obitido no endpoint de listagem de lojas:\nhttps://docs.gestao.corbee.com.br/lojas"
+                  },
+                  "logradouro": {
+                    "type": "string",
+                    "description": "Nome da rua, avenida ou via do endereço."
+                  },
+                  "numero": {
+                    "type": "string"
+                  },
+                  "bairro": {
+                    "type": "string"
+                  },
+                  "cidade": {
+                    "type": "integer",
+                    "description": "Pode ser obitido no endpoint de listagem de cidades:\nhttps://docs.gestao.corbee.com.br/cidades"
+                  },
+                  "estado": {
+                    "type": "integer",
+                    "description": "Pode ser obitido no endpoint de listagem de estados:\nhttps://docs.gestao.corbee.com.br/estados"
+                  },
+                  "cep": {
+                    "type": "string"
+                  },
+                  "gerente": {
+                    "type": "integer",
+                    "description": "Pode ser obitido no endpoint de listagem de gerentes:\nhttps://docs.gestao.corbee.com.br/gerentes"
+                  },
+                  "idCentroCusto": {
+                    "type": "integer",
+                    "description": "Pode ser obitido no endpoint de listagem de centro de custos:\nhttps://docs.gestao.corbee.com.br/centro-de-custos"
+                  },
+                  "idGrupoComissionamento": {
+                    "type": "integer",
+                    "description": "Pode ser obitido no endpoint de listagem de grupo de comissionamento:\nhttps://docs.gestao.corbee.com.br/grupos-de-comissionamento"
+                  },
+                  "recebimento": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "tipo": {
+                          "type": "string",
+                          "enum": [
+                            "cc",
+                            "cp",
+                            "dinheiro",
+                            "cheque",
+                            "pix"
+                          ]
+                        },
+                        "nomeFavorecido": {
+                          "type": "string"
+                        },
+                        "documentoFavorecido": {
+                          "type": "string",
+                          "description": "CPF ou CNPJ"
+                        },
+                        "banco": {
+                          "type": "string"
+                        },
+                        "agencia": {
+                          "type": "string"
+                        },
+                        "conta": {
+                          "type": "string"
+                        },
+                        "chavePix": {
+                          "type": "string",
+                          "description": "Obrigarória se o tipo de recebimento for 'pix'"
+                        },
+                        "tipoChavePix": {
+                          "type": "string",
+                          "enum": [
+                            "cpf",
+                            "cnpj",
+                            "celular",
+                            "email",
+                            "aleatoria"
+                          ],
+                          "description": "Obrigarória se o tipo de recebimento for 'pix'"
+                        }
+                      }
+                    }
+                  },
+                  "permissoes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "cadastroPropostaAreaCorretor": {
+                          "type": "boolean"
+                        },
+                        "cadastroPropostaSimplificado": {
+                          "type": "boolean"
+                        },
+                        "cadastroRefinanciamento": {
+                          "type": "boolean"
+                        },
+                        "cadastroPropostaFGTS": {
+                          "type": "boolean"
+                        },
+                        "visualizarComissao": {
+                          "type": "boolean"
+                        },
+                        "exibirBonus": {
+                          "type": "boolean"
+                        },
+                        "exibirStatusBanco": {
+                          "type": "boolean"
+                        },
+                        "abrirChamados": {
+                          "type": "boolean"
+                        },
+                        "digitacaoAutomaticaBanco": {
+                          "type": "boolean"
+                        },
+                        "bloqueioPagamentos": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "pendenciaQuantidade": {
+                                "type": "boolean"
+                              },
+                              "pendenciaDias": {
+                                "type": "boolean"
+                              },
+                              "fisicoQuantidade": {
+                                "type": "boolean"
+                              },
+                              "fisicoDias": {
+                                "type": "boolean"
+                              },
+                              "pagarSemFisico": {
+                                "type": "boolean"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "login",
+                  "cpf"
+                ]
+              },
+              "example": {
+                "login": "teste05",
+                "cpf": "13122343365",
+                "cnpj": "",
+                "razaoSocial": "",
+                "tipoCorretor": 1,
+                "status": "A",
+                "email": "email@gmail.com",
+                "telefone": "(11)98776-5432",
+                "nome": "Corretor Teste",
+                "dtNascimento": "1999-10-23",
+                "loja": 1,
+                "logradouro": "Rua teste",
+                "numero": "44",
+                "bairro": "Centro",
+                "cidade": 11791,
+                "estado": 21,
+                "cep": "01404001",
+                "gerente": 2,
+                "idCentroCusto": 1,
+                "idGrupoComissionamento": 3,
+                "recebimento": [
+                  {
+                    "tipo": "cc",
+                    "nomeFavorecido": "Corretor Teste",
+                    "documentoFavorecido": "13122343365",
+                    "banco": "001",
+                    "agencia": "1234",
+                    "conta": "12345",
+                    "tipoChavePix": "cpf",
+                    "chavePix": "13122343365"
+                  }
+                ],
+                "permissoes": [
+                  {
+                    "cadastroPropostaAreaCorretor": true,
+                    "cadastroPropostaSimplificado": false,
+                    "cadastroRefinanciamento": false,
+                    "cadastroPropostaFGTS": false,
+                    "visualizarComissao": false,
+                    "exibirBonus": false,
+                    "exibirStatusBanco": false,
+                    "abrirChamados": false,
+                    "digitacaoAutomaticaBanco": false,
+                    "bloqueioPagamentos": [
+                      {
+                        "pendenciaQuantidade": true,
+                        "pendenciaDias": true,
+                        "fisicoQuantidade": true,
+                        "fisicoDias": true,
+                        "pagarSemFisico": false
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": "sucesso",
+                  "message": "Corretor atualizado com sucesso.",
+                  "data": []
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/broker/list": {
+      "get": {
+        "summary": "Lista Corretores",
+        "deprecated": false,
+        "description": "Requisição que lista os corretores ativos do cliente.",
+        "tags": [
+          "Corretores"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/broker/{codigo_corretor}": {
+      "get": {
+        "summary": "Dados do Corretor",
+        "deprecated": false,
+        "description": "Esse método retorna um json com os dados do corretor logado.",
+        "tags": [
+          "Corretores"
+        ],
+        "parameters": [
+          {
+            "name": "codigo_corretor",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/product/": {
+      "get": {
+        "summary": "Get Produtos",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Produtos"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/product/{id_product}": {
+      "get": {
+        "summary": "Get Produto Id",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Produtos"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/product/product_types/list": {
+      "get": {
+        "summary": "Tipos de Produto List",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Produtos"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/product/product_types/product_type": {
+      "get": {
+        "summary": "Tipo Produto Especifico",
+        "deprecated": false,
+        "description": "Rota responsável por retornar um tipo de produto especifico.  \nPassando como argumento a inicial do tipo de produto.\n\nOs tipos de produtos podem ser os seguintes:\n\n1 = Novo  \n2 = Compra  \n3 = Cartao  \n4 = Portabilidade  \n5 = Refin  \n6 = Refin/Portabilidade  \n7 = Garantia Veiculo",
+        "tags": [
+          "Produtos"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/operation/product/id_bank/id_convenant/id_tipo_produto": {
+      "get": {
+        "summary": "Produtos Operacao",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Produtos"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/operation/bank": {
+      "get": {
+        "summary": "Bancos com operação",
+        "deprecated": false,
+        "description": "",
+        "operationId": "operacao-banco",
+        "tags": [
+          "Operações"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/operation/covenant/banco_id": {
+      "get": {
+        "summary": "Convenios por banco da operação",
+        "deprecated": false,
+        "description": "Retorna a lista de Convenios que possuem operação ativa.",
+        "tags": [
+          "Produtos"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/operation/commission/{id_bank}/{id_convenant}/{id_product}": {
+      "get": {
+        "summary": "Operação",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Produtos"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/operation/typeproduct/id_bank/id_convenant/id_type_product": {
+      "get": {
+        "summary": "Tipo Produto Operacao",
+        "deprecated": false,
+        "description": "Retorna a lista de tipos de produto possiveis.",
+        "tags": [
+          "Produtos"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/{codigo_proposta}/cancellation": {
+      "put": {
+        "summary": "Cancelar Proposta",
+        "deprecated": false,
+        "description": "Para efetuar o cancelamento é necessário passar o código da Proposta no Gestão como parametro na URI e no body da requisição o json seguindo o modelo.\nOs Tipos de Cancelamento podem ser encontrados na rota de Tipos de Cancelamento",
+        "tags": [
+          "Produtos"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tipoCancelamento": {
+                    "type": "integer"
+                  },
+                  "Observacao": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "tipoCancelamento",
+                  "Observacao"
+                ]
+              },
+              "example": {
+                "tipoCancelamento": 1,
+                "Observacao": "TEstando o endpoint de cancelamento"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/details/{codigo_proposta}": {
+      "get": {
+        "summary": "Detalhes Proposta",
+        "deprecated": false,
+        "description": "Retorna os dados da proposta informada de forma detalhada.",
+        "tags": [
+          "Produtos"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "proposal": {
+                          "type": "object",
+                          "properties": {
+                            "Codigo_Proposta_Webcred": {
+                              "type": "integer"
+                            },
+                            "Codigo_Proposta_Banco": {
+                              "type": "string"
+                            },
+                            "hash": {
+                              "type": "null"
+                            },
+                            "Data_Proposta": {
+                              "type": "string"
+                            },
+                            "Desc_Status_Proposta": {
+                              "type": "string"
+                            },
+                            "StatusProposta": {
+                              "type": "string"
+                            },
+                            "StatusFisico": {
+                              "type": "string"
+                            },
+                            "FormatoFisico": {
+                              "type": "string"
+                            },
+                            "Data_Averbacao": {
+                              "type": "null"
+                            },
+                            "Data_Pagamento_Banco": {
+                              "type": "null"
+                            },
+                            "Data_Digitacao_Banco": {
+                              "type": "string"
+                            },
+                            "StatusDigitacao": {
+                              "type": "null"
+                            },
+                            "StatusVerificacao": {
+                              "type": "null"
+                            },
+                            "Status_Pagamento_Corretor": {
+                              "type": "null"
+                            },
+                            "StatusPagCorretor": {
+                              "type": "string"
+                            },
+                            "StatusBanco": {
+                              "type": "null"
+                            },
+                            "Data_Pagamento_Corretor": {
+                              "type": "string"
+                            },
+                            "Valor_Bruto": {
+                              "type": "string"
+                            },
+                            "Valor_Liquido": {
+                              "type": "string"
+                            },
+                            "Valor_Producao": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "Codigo_Proposta_Webcred",
+                            "Codigo_Proposta_Banco",
+                            "hash",
+                            "Data_Proposta",
+                            "Desc_Status_Proposta",
+                            "StatusProposta",
+                            "StatusFisico",
+                            "FormatoFisico",
+                            "Data_Averbacao",
+                            "Data_Pagamento_Banco",
+                            "Data_Digitacao_Banco",
+                            "StatusDigitacao",
+                            "StatusVerificacao",
+                            "Status_Pagamento_Corretor",
+                            "StatusPagCorretor",
+                            "StatusBanco",
+                            "Data_Pagamento_Corretor",
+                            "Valor_Bruto",
+                            "Valor_Liquido",
+                            "Valor_Producao"
+                          ]
+                        },
+                        "client": {
+                          "type": "object",
+                          "properties": {
+                            "Nome_Cliente": {
+                              "type": "string"
+                            },
+                            "CPF_Cliente": {
+                              "type": "string"
+                            },
+                            "DtNascimento": {
+                              "type": "string"
+                            },
+                            "Sexo": {
+                              "type": "string"
+                            },
+                            "EstadoCivil": {
+                              "type": "string"
+                            },
+                            "RG": {
+                              "type": "string"
+                            },
+                            "DtEmissaoRG": {
+                              "type": "null"
+                            },
+                            "OrgaoExpedidor": {
+                              "type": "string"
+                            },
+                            "RGUF": {
+                              "type": "null"
+                            },
+                            "Conjuge": {
+                              "type": "null"
+                            },
+                            "NomeMae": {
+                              "type": "string"
+                            },
+                            "NomePai": {
+                              "type": "string"
+                            },
+                            "Naturalidade": {
+                              "type": "null"
+                            },
+                            "Salario": {
+                              "type": "integer"
+                            },
+                            "Especie": {
+                              "type": "null"
+                            },
+                            "Endereco": {
+                              "type": "string"
+                            },
+                            "NumeroResidencia": {
+                              "type": "string"
+                            },
+                            "Complemento": {
+                              "type": "string"
+                            },
+                            "Bairro": {
+                              "type": "string"
+                            },
+                            "Cidade": {
+                              "type": "string"
+                            },
+                            "UF": {
+                              "type": "string"
+                            },
+                            "Email": {
+                              "type": "string"
+                            },
+                            "TipoRecebimento": {
+                              "type": "string"
+                            },
+                            "BancoRecebimento": {
+                              "type": "integer"
+                            },
+                            "AgenciaRecebimento": {
+                              "type": "string"
+                            },
+                            "ContaRecebimento": {
+                              "type": "string"
+                            },
+                            "AgenciaDigito": {
+                              "type": "string"
+                            },
+                            "ContaDigito": {
+                              "type": "string"
+                            },
+                            "Contatos": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "telefone": {
+                                    "type": "string"
+                                  },
+                                  "tipo": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "required": [
+                            "Nome_Cliente",
+                            "CPF_Cliente",
+                            "DtNascimento",
+                            "Sexo",
+                            "EstadoCivil",
+                            "RG",
+                            "DtEmissaoRG",
+                            "OrgaoExpedidor",
+                            "RGUF",
+                            "Conjuge",
+                            "NomeMae",
+                            "NomePai",
+                            "Naturalidade",
+                            "Salario",
+                            "Especie",
+                            "Endereco",
+                            "NumeroResidencia",
+                            "Complemento",
+                            "Bairro",
+                            "Cidade",
+                            "UF",
+                            "Email",
+                            "TipoRecebimento",
+                            "BancoRecebimento",
+                            "AgenciaRecebimento",
+                            "ContaRecebimento",
+                            "AgenciaDigito",
+                            "ContaDigito",
+                            "Contatos"
+                          ]
+                        },
+                        "broker": {
+                          "type": "object",
+                          "properties": {
+                            "Codigo": {
+                              "type": "integer"
+                            },
+                            "Nome": {
+                              "type": "string"
+                            },
+                            "Tipo": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "Codigo",
+                            "Nome",
+                            "Tipo"
+                          ]
+                        },
+                        "operation": {
+                          "type": "object",
+                          "properties": {
+                            "Banco": {
+                              "type": "string"
+                            },
+                            "Convenio": {
+                              "type": "string"
+                            },
+                            "Produto": {
+                              "type": "string"
+                            },
+                            "Parcelas": {
+                              "type": "integer"
+                            },
+                            "Descricao": {
+                              "type": "string"
+                            },
+                            "IncidenciaProducao": {
+                              "type": "string"
+                            },
+                            "Diferimento": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "Banco",
+                            "Convenio",
+                            "Produto",
+                            "Parcelas",
+                            "Descricao",
+                            "IncidenciaProducao",
+                            "Diferimento"
+                          ]
+                        },
+                        "commission": {
+                          "type": "object",
+                          "properties": {
+                            "ValorComissaoEmpresa": {
+                              "type": "string"
+                            },
+                            "ValorComissaoCorretor": {
+                              "type": "string"
+                            },
+                            "ValorBonusEmpresa": {
+                              "type": "string"
+                            },
+                            "ValorBonusCorretor": {
+                              "type": "string"
+                            },
+                            "PercentualComissaoEmpresa": {
+                              "type": "string"
+                            },
+                            "PercentualComissaoCorretor": {
+                              "type": "string"
+                            },
+                            "PercentualBonusEmpresa": {
+                              "type": "string"
+                            },
+                            "PercentualBonusCorretor": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "ValorComissaoEmpresa",
+                            "ValorComissaoCorretor",
+                            "ValorBonusEmpresa",
+                            "ValorBonusCorretor",
+                            "PercentualComissaoEmpresa",
+                            "PercentualComissaoCorretor",
+                            "PercentualBonusEmpresa",
+                            "PercentualBonusCorretor"
+                          ]
+                        },
+                        "withdrawalsFGTS": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "data": {
+                                "type": "string"
+                              },
+                              "saque_disponivel": {
+                                "type": "string"
+                              },
+                              "vl_antecipacao": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "data",
+                              "saque_disponivel",
+                              "vl_antecipacao"
+                            ]
+                          }
+                        },
+                        "pendencie": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "DataVencimento": {
+                                "type": "string"
+                              },
+                              "DataCadastro": {
+                                "type": "string"
+                              },
+                              "Status": {
+                                "type": "string"
+                              },
+                              "ObsMensagem": {
+                                "type": "string"
+                              },
+                              "Pendencia": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "proposal",
+                        "client",
+                        "broker",
+                        "operation",
+                        "commission",
+                        "withdrawalsFGTS",
+                        "pendencie"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "status": true,
+                  "data": {
+                    "proposal": {
+                      "Codigo_Proposta_Webcred": 2329,
+                      "Codigo_Proposta_Banco": "",
+                      "hash": null,
+                      "Data_Proposta": "31/01/2022",
+                      "Desc_Status_Proposta": "Em Analise",
+                      "StatusProposta": "P",
+                      "StatusFisico": "PM",
+                      "FormatoFisico": "eletronico",
+                      "Data_Averbacao": null,
+                      "Data_Pagamento_Banco": null,
+                      "Data_Digitacao_Banco": "",
+                      "StatusDigitacao": null,
+                      "StatusVerificacao": null,
+                      "Status_Pagamento_Corretor": null,
+                      "StatusPagCorretor": "N",
+                      "StatusBanco": null,
+                      "Data_Pagamento_Corretor": "",
+                      "Valor_Bruto": "R$ 828,80",
+                      "Valor_Liquido": "R$ 523,57",
+                      "Valor_Producao": "R$ 828,80"
+                    },
+                    "client": {
+                      "Nome_Cliente": "Deyvid",
+                      "CPF_Cliente": "22061609864",
+                      "DtNascimento": "1994-12-23",
+                      "Sexo": "M",
+                      "EstadoCivil": "4",
+                      "RG": "",
+                      "DtEmissaoRG": null,
+                      "OrgaoExpedidor": "detran",
+                      "RGUF": null,
+                      "Conjuge": null,
+                      "NomeMae": "Norma da Silva",
+                      "NomePai": "Edilson Barcellos",
+                      "Naturalidade": null,
+                      "Salario": 0,
+                      "Especie": null,
+                      "Endereco": "Avenida Milton",
+                      "NumeroResidencia": "81",
+                      "Complemento": "Casa",
+                      "Bairro": "Vila Galvão",
+                      "Cidade": "GUARULHOS",
+                      "UF": "SP",
+                      "Email": "deyviddc@gmail.com",
+                      "TipoRecebimento": "C/C",
+                      "BancoRecebimento": 237,
+                      "AgenciaRecebimento": "054",
+                      "ContaRecebimento": "0801392",
+                      "AgenciaDigito": "3",
+                      "ContaDigito": "6",
+                      "Contatos": [
+                        {
+                          "telefone": "11934741881",
+                          "tipo": "Residencial"
+                        }
+                      ]
+                    },
+                    "broker": {
+                      "Codigo": 1,
+                      "Nome": "THATTYLA",
+                      "Tipo": "Externo"
+                    },
+                    "operation": {
+                      "Banco": "Safra",
+                      "Convenio": "FGTS",
+                      "Produto": "FGTS NOVO 1,99 CB",
+                      "Parcelas": 7,
+                      "Descricao": "Safra FGTS FGTS NOVO 1,99 CB 7X",
+                      "IncidenciaProducao": "Vl. Bruto",
+                      "Diferimento": "Não"
+                    },
+                    "commission": {
+                      "ValorComissaoEmpresa": "R$ 82,88",
+                      "ValorComissaoCorretor": "R$ 66,30",
+                      "ValorBonusEmpresa": "R$ 16,58",
+                      "ValorBonusCorretor": "R$ 8,29",
+                      "PercentualComissaoEmpresa": "10,00%",
+                      "PercentualComissaoCorretor": "8,00%",
+                      "PercentualBonusEmpresa": "2,00%",
+                      "PercentualBonusCorretor": "1,00%"
+                    },
+                    "withdrawalsFGTS": [
+                      {
+                        "data": "01/04/2022",
+                        "saque_disponivel": "R$ 183,19",
+                        "vl_antecipacao": "R$ 183,19"
+                      },
+                      {
+                        "data": "01/04/2023",
+                        "saque_disponivel": "R$ 174,03",
+                        "vl_antecipacao": "R$ 174,03"
+                      },
+                      {
+                        "data": "01/04/2024",
+                        "saque_disponivel": "R$ 165,32",
+                        "vl_antecipacao": "R$ 165,32"
+                      },
+                      {
+                        "data": "01/04/2025",
+                        "saque_disponivel": "R$ 157,06",
+                        "vl_antecipacao": "R$ 157,06"
+                      },
+                      {
+                        "data": "01/04/2026",
+                        "saque_disponivel": "R$ 149,20",
+                        "vl_antecipacao": "R$ 149,20"
+                      },
+                      {
+                        "data": "01/04/2027",
+                        "saque_disponivel": "R$ 7.860,57",
+                        "vl_antecipacao": "R$ 0,00"
+                      },
+                      {
+                        "data": "01/04/2028",
+                        "saque_disponivel": "R$ 7.467,54",
+                        "vl_antecipacao": "R$ 0,00"
+                      }
+                    ],
+                    "pendencie": [
+                      {
+                        "DataVencimento": "31/01/2022",
+                        "DataCadastro": "31/01/2022",
+                        "Status": "Nao Solucionada",
+                        "ObsMensagem": "",
+                        "Pendencia": "Digitação Automática"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/operation/commission/{id_bank}/{id_convenant}/{id_product}/{qtde_installments}": {
+      "get": {
+        "summary": "Operacao Especifica com Quantidade de Parcelas",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Produtos"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/{codProposta}/pendency": {
+      "post": {
+        "summary": "Cadastro de pendência",
+        "deprecated": false,
+        "description": "Através deste endpoint é possível cadastrar uma pendência para a proposta",
+        "operationId": "new-pendencie",
+        "tags": [
+          "Pendências"
+        ],
+        "parameters": [
+          {
+            "name": "codProposta",
+            "in": "path",
+            "description": "Código da proposta que receberá a pendência",
+            "required": true,
+            "example": "1234",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type_id": {
+                    "type": "integer",
+                    "description": "id do tipo de pendencia, encontrado na listagem de tipos de pendências"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição da pendência"
+                  },
+                  "responsible_id": {
+                    "type": "integer",
+                    "description": "Usuário responsável pela pendência"
+                  }
+                },
+                "required": [
+                  "type_id",
+                  "description"
+                ]
+              },
+              "example": {
+                "type_id": 5,
+                "description": "Falta enviar comprovante de residência",
+                "responsible_id": 25
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Sucesso",
+                    "value": {
+                      "status": true,
+                      "message": "Pendência cadastrada com sucesso",
+                      "data": {
+                        "id": 1274,
+                        "cod_proposal": 31258,
+                        "pendency_type": 5,
+                        "description": "Falta enviar comprovante de residência",
+                        "responsible_id": 1,
+                        "created_at": "2025-05-22 14:51:44"
+                      }
+                    }
+                  },
+                  "2": {
+                    "summary": "Exceção",
+                    "value": {
+                      "status": false,
+                      "message": "Tipo de pendência não encontrado",
+                      "data": []
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/pendency/types": {
+      "get": {
+        "summary": "Tipos de pendências",
+        "deprecated": false,
+        "description": "Retorna as pendências disponíbeis no sistema",
+        "operationId": "pendency-types",
+        "tags": [
+          "Pendências"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/pendencies": {
+      "get": {
+        "summary": "Busca de pendências",
+        "deprecated": false,
+        "description": "Retorna as pendências disponíbeis no sistema",
+        "operationId": "pendency-types",
+        "tags": [
+          "Pendências"
+        ],
+        "parameters": [
+          {
+            "name": "codProposta",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": 31238,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "codPendencia",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": 1258,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "cpf_cliente",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "90357482123",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "codigo-proposta-banco",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "55556",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/pendencies/{codigo-pendencia}": {
+      "get": {
+        "summary": "Pendencias",
+        "deprecated": false,
+        "description": "Retorna as pendências de propostas ou uma pendência específica ao informar o código da pendência. Também permite filtrar pelos dados do cliente (CPF) e pelo código da proposta no banco.\nCaso esteja acessando como corretor, será listado apenas do corretor logado.",
+        "tags": [
+          "Pendências"
+        ],
+        "parameters": [
+          {
+            "name": "codigo-pendencia",
+            "in": "path",
+            "description": "Listar pendência pelo código",
+            "required": true,
+            "example": "/api/v2/proposal/pendencies/18",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cpf",
+            "in": "query",
+            "description": "CPF do cliente",
+            "required": false,
+            "example": "/api/v2/proposal/pendencies?cpf=12345678930",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "codigo-proposta-banco",
+            "in": "query",
+            "description": "Código da proposta n banco",
+            "required": false,
+            "example": "/api/v2/proposal/pendencies?codigo-proposta-banco=07102078",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "data": [
+                    {
+                      "CodPendecia": 18,
+                      "Proposta": 1580,
+                      "PropostaBanco": "07102078",
+                      "Pendencia": "Assinatura Divergente",
+                      "Status": "Solucionada",
+                      "DataCadastro": "15/10/2021",
+                      "DataSolucao": "10/01/2022",
+                      "DataVencimento": "20/10/2021",
+                      "Observacao": "Teste",
+                      "solucao": "assinad",
+                      "CPFCliente": "12345678930",
+                      "NomeCliente": "João dos santos"
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/{codigo_proposta}/pendencies": {
+      "get": {
+        "summary": "Pendencia de Proposta Especifica",
+        "deprecated": false,
+        "description": "Rota que retorna as pendencias da proposta passada via parametro.",
+        "tags": [
+          "Pendências"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/pendencies/{codPendencia}/message": {
+      "get": {
+        "summary": "Mensagens Pendencia",
+        "deprecated": false,
+        "description": "Rota utilizada para retornar as mensagens da Pendencia.\nParametro passado é o Código da Pendencia que pode ser obtido listando as pendencias.",
+        "tags": [
+          "Pendências"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/pendencies/{codPendencia}/sendsolution": {
+      "put": {
+        "summary": "Enviar Solução do Corretor",
+        "deprecated": false,
+        "description": "Essa rota é para enviar a solução da Pendencia pelo Corretor. Usuários do Sistema Interno irão atuar na Pendência.\nEssa rota é exclusiva para acesso de corretor, caso queria confirmar solução da Pendência como usuário do Sistema Interno, utilizar a rota disponível para Sistema Interno.",
+        "tags": [
+          "Pendências"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Mensagem": {
+                    "type": "string"
+                  },
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "arquivo": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "Mensagem",
+                  "tipo",
+                  "arquivo"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/pendency/{codigo-pendencia}/solve": {
+      "post": {
+        "summary": "Solucionar Pendência",
+        "deprecated": false,
+        "description": "Através deste endpoint é possível cadastrar uma pendência para a proposta",
+        "operationId": "soluciona-pendencia",
+        "tags": [
+          "Pendências"
+        ],
+        "parameters": [
+          {
+            "name": "codigo-pendencia",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mensagem-solucao": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "mensagem-solucao"
+                ]
+              },
+              "example": {
+                "mensagem-solucao": "mensagem de solução de pendência"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Sucesso",
+                    "value": {
+                      "status": true,
+                      "message": "Pendência solucionada com sucesso.",
+                      "data": {
+                        "id-pendencia": 308,
+                        "id-proposta": 2551,
+                        "mensagem": "Esta proposta não possui mais pendências, confira a data de pagamento ao corretor.",
+                        "status-proposta": "L",
+                        "pendencias-restantes": 0,
+                        "pagamento-liberado": true,
+                        "retornado-para-fila": false
+                      }
+                    }
+                  },
+                  "2": {
+                    "summary": "Exceção",
+                    "value": {
+                      "status": false,
+                      "message": "Esta pendência já foi solucionada",
+                      "data": []
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/finance/costCenter": {
+      "get": {
+        "summary": "Listar centros de custo",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Financeiro"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/users/profile": {
+      "get": {
+        "summary": "Listar perfis de usuários",
+        "deprecated": false,
+        "description": "",
+        "operationId": "user-profiles",
+        "tags": [
+          "Usuário"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "data": [
+                    {
+                      "id": 1,
+                      "descricao": "Administrador"
+                    },
+                    {
+                      "id": 3,
+                      "descricao": "SUPERVISOR DE VENDAS"
+                    },
+                    {
+                      "id": 4,
+                      "descricao": "PROMOTORA"
+                    },
+                    {
+                      "id": 5,
+                      "descricao": "ATENDENTE"
+                    },
+                    {
+                      "id": 6,
+                      "descricao": "FINANCEIRO"
+                    },
+                    {
+                      "id": 7,
+                      "descricao": "OPERACIONAL"
+                    },
+                    {
+                      "id": 8,
+                      "descricao": "DIGITACAO"
+                    },
+                    {
+                      "id": 17,
+                      "descricao": "Franquia"
+                    },
+                    {
+                      "id": 19,
+                      "descricao": "LOJA"
+                    },
+                    {
+                      "id": 20,
+                      "descricao": "RH"
+                    },
+                    {
+                      "id": 21,
+                      "descricao": "Gerentes"
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/users/managers": {
+      "get": {
+        "summary": "Listar gerentes",
+        "deprecated": false,
+        "description": "Endpoint  retorna uma listagem de gerentes com detalhes como id, login, nome, status, dias trabalhados, dados pessoais, e horários permitidos.",
+        "tags": [
+          "Usuário"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "message": "Listagem Gerada",
+                  "data": [
+                    {
+                      "id": 8,
+                      "login": "ulisses",
+                      "nomeCompleto": "Ulisses Gerente",
+                      "status": "Inativo",
+                      "diasTrabalhados": "1,2,3,4,5,6,7",
+                      "inicioExp": null,
+                      "fimExp": null,
+                      "idLoja": -1,
+                      "loja": null,
+                      "codCorretorVinculado": 19,
+                      "corretorVinculado": "CORRETOR TESTE",
+                      "email": "ulissesgerente@corbee.com.br",
+                      "ramalUsuario": "1010",
+                      "cpfUsuario": "00995601003",
+                      "dataNascimento": "28/12/1982",
+                      "idPerfil": null,
+                      "gerenteCorretores": "S",
+                      "sexo": "M",
+                      "horarioPermitido": {
+                        "Segunda-Feira": {
+                          "inicio": "00:00",
+                          "fim": "23:59"
+                        },
+                        "Terça-Feira": {
+                          "inicio": "00:00",
+                          "fim": "23:59"
+                        },
+                        "Quarta-Feira": {
+                          "inicio": "00:00",
+                          "fim": "23:59"
+                        },
+                        "Quinta-Feira": {
+                          "inicio": "00:00",
+                          "fim": "23:59"
+                        },
+                        "Sexta-Feira": {
+                          "inicio": "00:00",
+                          "fim": "23:59"
+                        },
+                        "Sábado": {
+                          "inicio": "00:00",
+                          "fim": "23:59"
+                        },
+                        "Domingo": {
+                          "inicio": "00:00",
+                          "fim": "23:59"
+                        }
+                      },
+                      "rg": null,
+                      "orgaoEmissor": null,
+                      "endereco": null,
+                      "telefone": null,
+                      "estadoCivil": null,
+                      "agenteTellbox": null
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/users/profile/{user_profile_id}": {
+      "get": {
+        "summary": "Detalhes do Perfil",
+        "deprecated": false,
+        "description": "",
+        "operationId": "user-profiles-details",
+        "tags": [
+          "Usuário"
+        ],
+        "parameters": [
+          {
+            "name": "user_profile_id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tipos de Perfil:\nU = Sistema Interno,\nP = Lojas,\nC = Corretor Externo,\nF = Franquias",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "data": {
+                    "id": 3,
+                    "descricao": "SUPERVISOR DE VENDAS",
+                    "tipo": "U",
+                    "horarioPermitido": {
+                      "domingo": {
+                        "horaInicio": "00:00",
+                        "horaFim": "23:59"
+                      },
+                      "segunda-feira": {
+                        "horaInicio": "00:00",
+                        "horaFim": "23:59"
+                      },
+                      "terça-feira": {
+                        "horaInicio": "00:00",
+                        "horaFim": "23:59"
+                      },
+                      "quarta-feira": {
+                        "horaInicio": "00:00",
+                        "horaFim": "23:59"
+                      },
+                      "sexta-feira": {
+                        "horaInicio": "00:00",
+                        "horaFim": "23:59"
+                      },
+                      "sábado": {
+                        "horaInicio": "00:00",
+                        "horaFim": "23:59"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/users": {
+      "post": {
+        "summary": "Cadastro de usuário",
+        "deprecated": false,
+        "description": "",
+        "operationId": "cadastro-usuario",
+        "tags": [
+          "Usuário"
+        ],
+        "parameters": [
+          {
+            "name": "nome_completo",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "login",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cpf",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rg",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orgao_emissor",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "data_nascimento",
+            "in": "query",
+            "description": "Formato: 'AAAA-MM-DD'",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id_perfil",
+            "in": "query",
+            "description": "Pode ser obitido no endpoint de lista de perfis:\nhttps://docs.gestao.corbee.com.br/perfis-de-usuarios",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "id_centro_custo",
+            "in": "query",
+            "description": "Pode ser obitido no endpoint de listagem de centro de custos:\nhttps://docs.gestao.corbee.com.br/centro-de-custos",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "dias_utilizacao_semana",
+            "in": "query",
+            "description": "dias da semana de 1 a 7 separados por vírgula",
+            "required": false,
+            "example": "1,2,3,4,5,6,7",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "horario_permitido_inicio",
+            "in": "query",
+            "description": "Hora no formato: HH:MM:SS",
+            "required": false,
+            "example": "00:00:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "horario_permitido_fim",
+            "in": "query",
+            "description": "Hora no formato: HH:MM:SS",
+            "required": false,
+            "example": "23:59:59",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id_loja",
+            "in": "query",
+            "description": "Pode ser obitido no endpoint de listagem de lojas:\nhttps://docs.gestao.corbee.com.br/lojas",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sexo",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "F",
+                "M"
+              ]
+            }
+          },
+          {
+            "name": "estado_civil",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "divorciado",
+                "viuvo",
+                "casado",
+                "solteiro",
+                "outro"
+              ]
+            }
+          },
+          {
+            "name": "atende_telemarketing",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "gerente_corretores",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "acessa_area_gerentes",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "salario",
+            "in": "query",
+            "description": "Necessário apenas se for Gerente de corretores",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "ajuda_custo",
+            "in": "query",
+            "description": "Necessário apenas se for Gerente de corretores",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "fuso_horario_agenda",
+            "in": "query",
+            "description": "Fuso horário para agenda, caso necessário",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ACT",
+                "AMT",
+                "BRT",
+                "FNT"
+              ]
+            }
+          },
+          {
+            "name": "senha_expira",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "visivel_corretores",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "ramal_pabx",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "utiliza_mfa",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "id_corretor",
+            "in": "query",
+            "description": "Código do corretor vinculado ao usuário",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "endereco",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "telefone",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "celular",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ativo",
+            "in": "query",
+            "description": "Ativa ou inativa o usuário no sistema",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "name": "acesso_restrito",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "id_ilha",
+            "in": "query",
+            "description": "Pode ser obitido no endpoint de listagem de ilhas:\nhttps://docs.gestao.corbee.com.br/ilhas",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              },
+              "example": {
+                "nome_completo": "Maria Joaquina Amaral Pereira Goes",
+                "login": "joaquina",
+                "cpf": "007.287.507-08",
+                "rg": "56456533",
+                "data_nascimento": "2020-09-15",
+                "id_perfil": 1,
+                "email": "mariajoaquina@gmail.com",
+                "sexo": "F",
+                "horario_permitido_inicio": "00:00:00",
+                "horario_permitido_fim": "23:59:00",
+                "estado_civil": "solteiro",
+                "id_centro_custo": 4,
+                "senha_expira": true,
+                "id_corretor": 12,
+                "id_ilha": 100
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/users/{id_usuario}": {
+      "put": {
+        "summary": "Atualização de usuário",
+        "deprecated": false,
+        "description": "",
+        "operationId": "cadastro-usuario",
+        "tags": [
+          "Usuário"
+        ],
+        "parameters": [
+          {
+            "name": "id_usuario",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "nome_completo",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "login",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cpf",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rg",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orgao_emissor",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "data_nascimento",
+            "in": "query",
+            "description": "Formato: 'AAAA-MM-DD'",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id_perfil",
+            "in": "query",
+            "description": "Pode ser obitido no endpoint de lista de perfis:\nhttps://docs.gestao.corbee.com.br/perfis-de-usuarios",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "id_centro_custo",
+            "in": "query",
+            "description": "Pode ser obitido no endpoint de listagem de centro de custos:\nhttps://docs.gestao.corbee.com.br/centro-de-custos",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "dias_utilizacao_semana",
+            "in": "query",
+            "description": "dias da semana de 1 a 7 separados por vírgula",
+            "required": false,
+            "example": "1,2,3,4,5,6,7",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "horario_permitido_inicio",
+            "in": "query",
+            "description": "Hora no formato: HH:MM:SS",
+            "required": false,
+            "example": "00:00:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "horario_permitido_fim",
+            "in": "query",
+            "description": "Hora no formato: HH:MM:SS",
+            "required": false,
+            "example": "23:59:59",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id_loja",
+            "in": "query",
+            "description": "Pode ser obitido no endpoint de listagem de lojas:\nhttps://docs.gestao.corbee.com.br/lojas",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sexo",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "F",
+                "M"
+              ]
+            }
+          },
+          {
+            "name": "estado_civil",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "divorciado",
+                "viuvo",
+                "casado",
+                "solteiro",
+                "outro"
+              ]
+            }
+          },
+          {
+            "name": "atende_telemarketing",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "gerente_corretores",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "acessa_area_gerentes",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "salario",
+            "in": "query",
+            "description": "Necessário apenas se for Gerente de corretores",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "ajuda_custo",
+            "in": "query",
+            "description": "Necessário apenas se for Gerente de corretores",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "fuso_horario_agenda",
+            "in": "query",
+            "description": "Fuso horário para agenda, caso necessário",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ACT",
+                "AMT",
+                "BRT",
+                "FNT"
+              ]
+            }
+          },
+          {
+            "name": "senha_expira",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "visivel_corretores",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "ramal_pabx",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "utiliza_mfa",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "id_corretor",
+            "in": "query",
+            "description": "Código do corretor vinculado ao usuário",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "endereco",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "telefone",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "celular",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ativo",
+            "in": "query",
+            "description": "Ativa ou inativa o usuário no sistema",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "acesso_restrito",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "id_ilha",
+            "in": "query",
+            "description": "Pode ser obitido no endpoint de listagem de ilhas:\nhttps://docs.gestao.corbee.com.br/ilhas",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              },
+              "example": {
+                "nome_completo": "Maria Joaquina Amaral Pereira Goes",
+                "login": "joaquina",
+                "cpf": "007.287.507-08",
+                "rg": "56456533",
+                "data_nascimento": "2020-09-15",
+                "id_perfil": 1,
+                "email": "mariajoaquina@gmail.com",
+                "sexo": "F",
+                "horario_permitido_inicio": "00:00:00",
+                "horario_permitido_fim": "23:59:00",
+                "estado_civil": "solteiro",
+                "id_centro_custo": 4,
+                "senha_expira": true,
+                "id_corretor": 12,
+                "id_ilha": 100
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/users/{user_id}": {
+      "get": {
+        "summary": "Dados do Usuário",
+        "deprecated": false,
+        "description": "",
+        "operationId": "user-profiles",
+        "tags": [
+          "Usuário"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "Se não for informado usuário, retornará os dados do usuário autenticado na API",
+            "required": true,
+            "example": 6,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "message": "Listagem Gerada",
+                  "data": [
+                    {
+                      "id": 4,
+                      "login": "nicole",
+                      "nomeCompleto": "Nicole Helena Vega",
+                      "status": "Ativo",
+                      "diasTrabalhados": "1,2,3,4,5,6,7",
+                      "inicioExp": null,
+                      "fimExp": null,
+                      "idLoja": 1,
+                      "loja": "Matriz",
+                      "codCorretorVinculado": 3,
+                      "corretorVinculado": "Nicole Helena Vega",
+                      "email": "nicole@teste.com.br",
+                      "ramalUsuario": "1007",
+                      "cpfUsuario": "17125036856",
+                      "dataNascimento": "18/09/1984",
+                      "idPerfil": null,
+                      "gerenteCorretores": "N",
+                      "sexo": "M",
+                      "horarioPermitido": {
+                        "Segunda-Feira": {
+                          "inicio": "00:00",
+                          "fim": "23:59"
+                        },
+                        "Terça-Feira": {
+                          "inicio": "00:00",
+                          "fim": "23:59"
+                        },
+                        "Quarta-Feira": {
+                          "inicio": "00:00",
+                          "fim": "23:59"
+                        },
+                        "Quinta-Feira": {
+                          "inicio": "00:00",
+                          "fim": "23:59"
+                        },
+                        "Sexta-Feira": {
+                          "inicio": "00:00",
+                          "fim": "23:59"
+                        },
+                        "Sábado": {
+                          "inicio": "00:00",
+                          "fim": "23:59"
+                        },
+                        "Domingo": {
+                          "inicio": "00:00",
+                          "fim": "23:59"
+                        }
+                      },
+                      "rg": null,
+                      "orgaoEmissor": null,
+                      "endereco": null,
+                      "telefone": null,
+                      "estadoCivil": null,
+                      "agenteTellbox": null
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/users/list": {
+      "get": {
+        "summary": "Lista simplificada de usuários",
+        "deprecated": false,
+        "description": "Pode ser utilizada para uma listagem rápida de todos os usuários ativos no sistema",
+        "operationId": "user-profiles",
+        "tags": [
+          "Usuário"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "message": "Listagem Gerada",
+                  "data": [
+                    {
+                      "Id": 1,
+                      "NomeUsuario": "admin",
+                      "NomeCompleto": "ADMINISTRADOR"
+                    },
+                    {
+                      "Id": 99,
+                      "NomeUsuario": "allex",
+                      "NomeCompleto": "Allex"
+                    },
+                    {
+                      "Id": 51,
+                      "NomeUsuario": "anthony",
+                      "NomeCompleto": "ANTHONY"
+                    },
+                    {
+                      "Id": 4,
+                      "NomeUsuario": "beatriz",
+                      "NomeCompleto": "BEATRIZ DINIZ"
+                    },
+                    {
+                      "Id": 6,
+                      "NomeUsuario": "beto",
+                      "NomeCompleto": "Beto Souza"
+                    },
+                    {
+                      "Id": 27,
+                      "NomeUsuario": "felipe",
+                      "NomeCompleto": "FELIPE"
+                    },
+                    {
+                      "Id": 153,
+                      "NomeUsuario": "joaquina",
+                      "NomeCompleto": "Mariana Joaquina Amaral Goes"
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/configurations-models": {
+      "get": {
+        "summary": "Listar Modelos",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Configurações"
+        ],
+        "parameters": [
+          {
+            "name": "model_id",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "bank_id",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Editar Configuração",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Configurações"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              },
+              "example": {
+                "configuration_id": 1,
+                "name": "novo nome configuração",
+                "configuration": {
+                  "representative_percentage": "20%",
+                  "intermediation_percentage": "30%",
+                  "susep_register_cod": "988752"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/configurations-models/configurations": {
+      "get": {
+        "summary": "Listar Configurações",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Configurações"
+        ],
+        "parameters": [
+          {
+            "name": "model_id",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "bank_id",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/configurations-models/configuration/1": {
+      "get": {
+        "summary": "Buscar Configuração",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Configurações"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/commission/group": {
+      "get": {
+        "summary": "Grupos de Comissionamento",
+        "deprecated": false,
+        "description": "Lista os grupos de comissionamento",
+        "operationId": "commission_groups",
+        "tags": [
+          "Comissionamento"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "message": "Grupo(s) de comissão listado(s) com sucesso",
+                  "data": [
+                    {
+                      "id": 0,
+                      "descricao": "Normal"
+                    },
+                    {
+                      "id": 2,
+                      "descricao": "OURO"
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/commission/group/{id_grupo}": {
+      "get": {
+        "summary": "Grupo de Comissionamento Específico",
+        "deprecated": false,
+        "description": "Busca o grupo de comissionamento pelo id do grupo",
+        "operationId": "commission_group_details",
+        "tags": [
+          "Comissionamento"
+        ],
+        "parameters": [
+          {
+            "name": "id_grupo",
+            "in": "path",
+            "description": "Id do grupo de comissionamento",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "message": "Grupo(s) de comissão listado(s) com sucesso",
+                  "data": {
+                    "id": 0,
+                    "descricao": "Normal",
+                    "percentual": 100,
+                    "percentual_gerente": null,
+                    "percentual_regional_1": null,
+                    "percentual_regional_2": null,
+                    "obs": "Grupo recebe 100% da comissao atribuida ao corretor."
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/operation/mapped/{convenant}/{bank}": {
+      "get": {
+        "summary": "Buscar Por Banco",
+        "deprecated": false,
+        "description": "",
+        "operationId": "operacao-mapeada",
+        "tags": [
+          "Operações"
+        ],
+        "parameters": [
+          {
+            "name": "convenant",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "bank",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/notifications/list": {
+      "get": {
+        "summary": "Listar Notificações",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Notificações"
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "unready",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/notifications/send": {
+      "post": {
+        "summary": "Enviar Notificações",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Notificações"
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "unready",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              },
+              "example": [
+                {
+                  "user_id": 6,
+                  "type_user": "internal",
+                  "type_notification": "portability_balance_paid",
+                  "variables": {
+                    "codCorretor": 4,
+                    "nomeCorretor": "Beto"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/reports/queue/3": {
+      "get": {
+        "summary": "BuscarRelatorio",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Relatorios"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/telemarketing/ilhas": {
+      "post": {
+        "summary": "Cadastro de ilhas",
+        "deprecated": false,
+        "description": "Cadastra uma nova ilha. Campos obrigatórios: nome_ilha, area, gerentes e id_franquia (obrigatório se a área for FR).",
+        "tags": [
+          "Telemarketing"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome_ilha": {
+                    "type": "string",
+                    "description": "Noma da ilha que deseja cadastrar"
+                  },
+                  "area": {
+                    "type": "string",
+                    "description": "Área que deseja vincular à ilha",
+                    "enum": [
+                      "SI",
+                      "FR"
+                    ]
+                  },
+                  "gerentes": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "description": "Gerente(s) que deseja vincular à ilha"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "A",
+                      "I"
+                    ],
+                    "description": "Status da ilha"
+                  },
+                  "id_franquia": {
+                    "type": "integer",
+                    "description": "(obrigatório se a área for FR)\nPode ser obitido no endpoint de listagem de lojas:\nhttps://docs.gestao.corbee.com.br/lojas"
+                  }
+                },
+                "required": [
+                  "nome_ilha",
+                  "area",
+                  "gerentes"
+                ]
+              },
+              "example": {
+                "nome_ilha": "Ilhabela (SP)",
+                "area": "SI",
+                "gerentes": [
+                  2,
+                  3
+                ],
+                "status": "A"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "data": {
+                    "id": 300,
+                    "nome_ilha": "Ilhabela (SP)",
+                    "area": "Sistema Interno",
+                    "franquia_vinculada": 0,
+                    "status": "A",
+                    "gerentes": [
+                      {
+                        "id": 2,
+                        "nome": "PAULO DA SILVA"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "summary": "Listar ilhas",
+        "deprecated": false,
+        "description": "Lista todas as ilhas. Se os parâmetros id_ilha, status forem incluídos na URL, o resultado será filtrado conforme os valores informados.",
+        "tags": [
+          "Telemarketing"
+        ],
+        "parameters": [
+          {
+            "name": "id_ilha",
+            "in": "query",
+            "description": "Lista ilha por id",
+            "required": false,
+            "example": "/api/v2/telemarketing/ilhas/300",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Lista ilhas por status, com ou sem o parâmetro id",
+            "required": false,
+            "example": "/api/v2/telemarketing/ilhas/300?status=A",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "data": {
+                    "id": 300,
+                    "nome_ilha": "Ilhabela (SP)",
+                    "area": "Sistema Interno",
+                    "franquia_vinculada": 0,
+                    "status": "A",
+                    "gerentes": [
+                      {
+                        "id": 539,
+                        "nome": "MARCOS COSTA"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/telemarketing/ilhas/{id_ilha}": {
+      "put": {
+        "summary": "Atualizar ilhas ",
+        "deprecated": false,
+        "description": "Atualiza os dados de uma ilha específica, identificada pelo id_ilha na URL. ",
+        "tags": [
+          "Telemarketing"
+        ],
+        "parameters": [
+          {
+            "name": "id_ilha",
+            "in": "path",
+            "description": "ID da ilha ",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome_ilha": {
+                    "type": "string",
+                    "description": "Nome da ilha"
+                  },
+                  "area": {
+                    "type": "string",
+                    "enum": [
+                      "SI",
+                      "FR"
+                    ],
+                    "description": "Área vinculada à ilha"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "A",
+                      "I"
+                    ],
+                    "description": "Status da ilha"
+                  },
+                  "id_franquia": {
+                    "type": "integer",
+                    "description": "(obrigatório se a área for FR).\nPode ser obitido no endpoint de listagem de lojas:\nhttps://docs.gestao.corbee.com.br/lojas"
+                  }
+                }
+              },
+              "example": {
+                "nome_ilha": "Ilhabela (SAMPA)",
+                "area": "SI",
+                "status": "A"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "data": {
+                    "id": 300,
+                    "nome_ilha": "Ilhabela (SAMPA)",
+                    "area": "Sistema Interno",
+                    "franquia_vinculada": 0,
+                    "status": "A",
+                    "gerentes": [
+                      {
+                        "id": 539,
+                        "nome": "MARCOS COSTA"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/telemarketing/ilhas/manager": {
+      "post": {
+        "summary": "Cadastrar gerente(s) em uma ilha",
+        "deprecated": false,
+        "description": "Cadastra gerentes para uma ilha. Requer id_ilha e uma lista de IDs de gerentes no corpo da requisição.",
+        "tags": [
+          "Telemarketing"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id_ilha": {
+                    "type": "integer",
+                    "description": "Id da ilha "
+                  },
+                  "gersntes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "ID(s) do(s) gerente(s) que deseja cadastrar na ilha"
+                  }
+                },
+                "required": [
+                  "id_ilha",
+                  "gersntes"
+                ]
+              },
+              "example": {
+                "id_ilha": 300,
+                "gerentes": [
+                  2,
+                  539
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "data": {
+                    "id": 300,
+                    "nome_ilha": "Ilhabela (SAMPA)",
+                    "area": "Sistema Interno",
+                    "franquia_vinculada": 0,
+                    "status": "A",
+                    "gerentes": [
+                      {
+                        "id": 2,
+                        "nome": "ANA JULIA"
+                      },
+                      {
+                        "id": 539,
+                        "nome": "MARCOS COSTA"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/telemarketing/ilhas/{id_ilha}/manager/{id_gerente}": {
+      "delete": {
+        "summary": "Remover gerente de uma ilha",
+        "deprecated": false,
+        "description": "Remove o gerente específico da ilha informada. Requer o id_ilha na URL e o id_gerente a ser removido.",
+        "tags": [
+          "Telemarketing"
+        ],
+        "parameters": [
+          {
+            "name": "id_ilha",
+            "in": "path",
+            "description": "ID da ilha à qual o gerente está vinculado",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "id_gerente",
+            "in": "path",
+            "description": "ID do gerente",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/": {
+      "get": {
+        "summary": "Status API",
+        "deprecated": false,
+        "description": "Endpoint para retornar o status da API",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                },
+                "example": {
+                  "status": "Online"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v2/bank/": {
+      "get": {
+        "summary": "Get Bancos",
+        "deprecated": false,
+        "description": "Método utilizado para retornar os bancos do cliente",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/bank/{id_bank}": {
+      "get": {
+        "summary": "Get Banco Id",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/covenant/": {
+      "get": {
+        "summary": "Get Convenios",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/covenant/{id_convenant}": {
+      "get": {
+        "summary": "Get Convenio Id",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/clients/cpf/{numero_cpf}": {
+      "get": {
+        "summary": "Cliente",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/country/state": {
+      "get": {
+        "summary": "Lista Estados",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "message": "Listagem de Estados",
+                  "data": [
+                    {
+                      "id": 1,
+                      "uf": "AC",
+                      "state": "Acre"
+                    },
+                    {
+                      "id": 2,
+                      "uf": "AL",
+                      "state": "Alagoas"
+                    },
+                    {
+                      "id": 3,
+                      "uf": "AP",
+                      "state": "Amapá"
+                    },
+                    {
+                      "id": 4,
+                      "uf": "AM",
+                      "state": "Amazonas"
+                    },
+                    {
+                      "id": 5,
+                      "uf": "BA",
+                      "state": "Bahia"
+                    },
+                    {
+                      "id": 6,
+                      "uf": "CE",
+                      "state": "Ceará"
+                    },
+                    {
+                      "id": 7,
+                      "uf": "DF",
+                      "state": "Distrito Federal"
+                    },
+                    {
+                      "id": 8,
+                      "uf": "ES",
+                      "state": "Espirito Santo"
+                    },
+                    {
+                      "id": 9,
+                      "uf": "GO",
+                      "state": "Goiás"
+                    },
+                    {
+                      "id": 10,
+                      "uf": "MA",
+                      "state": "Maranhão"
+                    },
+                    {
+                      "id": 11,
+                      "uf": "MT",
+                      "state": "Mato Grosso"
+                    },
+                    {
+                      "id": 12,
+                      "uf": "MS",
+                      "state": "Mato Grosso do Sul"
+                    },
+                    {
+                      "id": 13,
+                      "uf": "MG",
+                      "state": "Minas Gerais"
+                    },
+                    {
+                      "id": 14,
+                      "uf": "PA",
+                      "state": "Pará"
+                    },
+                    {
+                      "id": 15,
+                      "uf": "PB",
+                      "state": "Paraíba"
+                    },
+                    {
+                      "id": 16,
+                      "uf": "PR",
+                      "state": "Paraná"
+                    },
+                    {
+                      "id": 17,
+                      "uf": "PE",
+                      "state": "Pernambuco"
+                    },
+                    {
+                      "id": 18,
+                      "uf": "PI",
+                      "state": "Piauí"
+                    },
+                    {
+                      "id": 19,
+                      "uf": "RJ",
+                      "state": "Rio de Janeiro"
+                    },
+                    {
+                      "id": 20,
+                      "uf": "RN",
+                      "state": "Rio Grande do Norte"
+                    },
+                    {
+                      "id": 21,
+                      "uf": "RS",
+                      "state": "Rio Grande do Sul"
+                    },
+                    {
+                      "id": 22,
+                      "uf": "RO",
+                      "state": "Rondônia"
+                    },
+                    {
+                      "id": 23,
+                      "uf": "RR",
+                      "state": "Rorâima"
+                    },
+                    {
+                      "id": 24,
+                      "uf": "SC",
+                      "state": "Santa Catarina"
+                    },
+                    {
+                      "id": 25,
+                      "uf": "SP",
+                      "state": "São Paulo"
+                    },
+                    {
+                      "id": 26,
+                      "uf": "SE",
+                      "state": "Sergipe"
+                    },
+                    {
+                      "id": 27,
+                      "uf": "TO",
+                      "state": "Tocantins"
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/country/state/{id_state}": {
+      "get": {
+        "summary": "Estado Id",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "message": "Return State",
+                  "data": [
+                    {
+                      "id": 25,
+                      "uf": "SP",
+                      "state": "São Paulo"
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/country/state/{id_state}/city": {
+      "get": {
+        "summary": "Lista Cidades",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id_state",
+            "in": "path",
+            "description": "Pode ser obitido no endpoint de listagem de estados\nhttps://docs.gestao.corbee.com.br/estados",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "message": "Listagem de Cidades",
+                  "data": [
+                    {
+                      "id": 1,
+                      "uf_id": "1",
+                      "city": "ACRELANDIA",
+                      "uf": "AC"
+                    },
+                    {
+                      "id": 2,
+                      "uf_id": "1",
+                      "city": "ASSIS BRASIL",
+                      "uf": "AC"
+                    },
+                    {
+                      "id": 3,
+                      "uf_id": "1",
+                      "city": "BRASILEIA",
+                      "uf": "AC"
+                    },
+                    {
+                      "id": 4,
+                      "uf_id": "1",
+                      "city": "BUJARI",
+                      "uf": "AC"
+                    },
+                    {
+                      "id": 5,
+                      "uf_id": "1",
+                      "city": "CAPIXABA",
+                      "uf": "AC"
+                    },
+                    {
+                      "id": 6,
+                      "uf_id": "1",
+                      "city": "CRUZEIRO DO SUL",
+                      "uf": "AC"
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/country/city/{id_city}": {
+      "get": {
+        "summary": "Cidades Id",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/marital-status": {
+      "get": {
+        "summary": "Estado Civil - Listagem",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "data": [
+                    {
+                      "id": 1,
+                      "NmEstadoCivil": "Divorciado(a)"
+                    },
+                    {
+                      "id": 2,
+                      "NmEstadoCivil": "Viuvo(a)"
+                    },
+                    {
+                      "id": 3,
+                      "NmEstadoCivil": "Casado(a)"
+                    },
+                    {
+                      "id": 4,
+                      "NmEstadoCivil": "Solteiro(a)"
+                    },
+                    {
+                      "id": 5,
+                      "NmEstadoCivil": "Separado(a)"
+                    },
+                    {
+                      "id": 6,
+                      "NmEstadoCivil": "Outros"
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/clients/bankdata/typesreception": {
+      "get": {
+        "summary": "Lista Tipos de Recebimento Cliente",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "example": {
+                  "status": true,
+                  "message": "Tipos Recebimento",
+                  "data": {
+                    "C_C": "C/C",
+                    "C_P": "C/P",
+                    "OP": "OP",
+                    "CH": "CH"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/proposal/document/{codProposta}": {
+      "get": {
+        "summary": "Listar Arquivos da Proposta",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/v2/lojas": {
+      "get": {
+        "summary": "Lojas",
+        "deprecated": false,
+        "description": "Retorna a listagem de Lojas cadastradas no sistema.\nCaso tenha realizado login como Corretor, retornará somente a loja do corretor.\nPara listar todas as lojas do sistema precisa estar logado como Sistema Interno.",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "IdLoja": {
+                            "type": "integer"
+                          },
+                          "Loja": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "IdLoja",
+                          "Loja"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "status": true,
+                  "message": "Listagem Gerada",
+                  "data": [
+                    {
+                      "IdLoja": -1,
+                      "Loja": "Sistema Interno"
+                    },
+                    {
+                      "IdLoja": 1,
+                      "Loja": "Matriz"
+                    },
+                    {
+                      "IdLoja": 2,
+                      "Loja": "Teste Franquia"
+                    },
+                    {
+                      "IdLoja": 3,
+                      "Loja": "LOJA2"
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://demo.corbee.com.br",
+      "description": "Documentacao"
+    }
+  ],
+  "security": [
+    {
+      "bearer": []
+    }
+  ]
+}
