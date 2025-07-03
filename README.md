@@ -67,6 +67,18 @@ All operations automatically handle JWT authentication using the configured cred
 - `listProposalFiles` - List files attached to proposal
 - `downloadProposalFile` - Download proposal file in base64
 
+### Commission Operations
+- `listCommissionGroups` - List commission groups
+- `getCommissionGroup` - Get specific commission group by ID
+
+### Operations Management
+- `listBanksWithOperations` - List banks with operations
+- `searchOperationsByBank` - Search operations by specific bank
+
+### Notifications
+- `listNotifications` - List notifications
+- `sendNotification` - Send notification (to all users, specific user, or role)
+
 ## Configuration
 
 ### Credentials Setup
@@ -97,6 +109,15 @@ All operations automatically handle JWT authentication using the configured cred
 3. Use "Add Broker Observation" to add notes
 4. Use "Submit Proposal to Bank" when ready
 5. Use "Search Proposals" to find specific proposals by CPF, code, or name
+
+### Commission Management
+1. Use "List Commission Groups" to see available groups
+2. Use "Get Commission Group" to get details of specific group
+
+### Send Notifications
+1. Use "Send Notification" to notify users
+2. Choose recipient type: All Users, Specific User, or Role
+3. Provide title and message content
 
 ## API Documentation
 

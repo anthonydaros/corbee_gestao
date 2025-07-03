@@ -1,7 +1,7 @@
 {
 	"name": "@devanthonymax/n8n-nodes-corbeegestao",
-	"version": "2.0.0",
-	"description": "n8n community node for Corbee Gestão API integration - User, Broker and Proposal management",
+	"version": "2.1.0",
+	"description": "n8n community node for Corbee Gestão API integration - Complete business management solution",
 	"keywords": [
 		"n8n-community-node-package",
 		"corbee",
@@ -9,6 +9,9 @@
 		"broker",
 		"user-management",
 		"proposal-management",
+		"commission",
+		"notifications",
+		"operations",
 		"fgts",
 		"api-integration"
 	],

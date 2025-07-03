@@ -211,6 +211,48 @@ export class CorbeeGestao implements INodeType {
             description: "Download proposal file in base64",
             action: "Download proposal file",
           },
+
+          // Commission Operations
+          {
+            name: "List Commission Groups",
+            value: "listCommissionGroups",
+            description: "List commission groups",
+            action: "List commission groups",
+          },
+          {
+            name: "Get Commission Group",
+            value: "getCommissionGroup",
+            description: "Get specific commission group by ID",
+            action: "Get commission group",
+          },
+
+          // Operations
+          {
+            name: "List Banks with Operations",
+            value: "listBanksWithOperations",
+            description: "List banks with operations",
+            action: "List banks with operations",
+          },
+          {
+            name: "Search Operations by Bank",
+            value: "searchOperationsByBank",
+            description: "Search operations by bank",
+            action: "Search operations by bank",
+          },
+
+          // Notifications
+          {
+            name: "List Notifications",
+            value: "listNotifications",
+            description: "List notifications",
+            action: "List notifications",
+          },
+          {
+            name: "Send Notification",
+            value: "sendNotification",
+            description: "Send notification",
+            action: "Send notification",
+          },
         ],
         default: "createBroker",
       },
@@ -396,6 +438,104 @@ export class CorbeeGestao implements INodeType {
         },
         default: "",
         description: "Type of document being uploaded",
+      },
+
+      // Commission Group ID field
+      {
+        displayName: "Commission Group ID",
+        name: "commissionGroupId",
+        type: "string",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["getCommissionGroup"],
+          },
+        },
+        default: "",
+        description: "The ID of the commission group to retrieve",
+      },
+
+      // Bank ID field for operations
+      {
+        displayName: "Bank ID",
+        name: "bankId",
+        type: "string",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["searchOperationsByBank"],
+          },
+        },
+        default: "",
+        description: "The ID of the bank to search operations for",
+      },
+
+      // Notification fields
+      {
+        displayName: "Notification Title",
+        name: "notificationTitle",
+        type: "string",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["sendNotification"],
+          },
+        },
+        default: "",
+        description: "Title of the notification",
+      },
+      {
+        displayName: "Notification Message",
+        name: "notificationMessage",
+        type: "string",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["sendNotification"],
+          },
+        },
+        default: "",
+        description: "Message content of the notification",
+      },
+      {
+        displayName: "Recipient Type",
+        name: "recipientType",
+        type: "options",
+        options: [
+          {
+            name: "All Users",
+            value: "all",
+          },
+          {
+            name: "Specific User",
+            value: "user",
+          },
+          {
+            name: "Specific Role",
+            value: "role",
+          },
+        ],
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["sendNotification"],
+          },
+        },
+        default: "all",
+        description: "Type of recipient for the notification",
+      },
+      {
+        displayName: "Recipient ID",
+        name: "recipientId",
+        type: "string",
+        displayOptions: {
+          show: {
+            operation: ["sendNotification"],
+            recipientType: ["user", "role"],
+          },
+        },
+        default: "",
+        description: "ID of the specific user or role (if not sending to all)",
       },
 
       // Broker ID field
@@ -1402,6 +1542,88 @@ export class CorbeeGestao implements INodeType {
             method: "GET",
             url: `${baseUrl}/api/v2/proposta/${proposalId}/arquivo/${fileId}`,
             headers,
+            json: true,
+          });
+
+          // Commission Operations
+        } else if (operation === "listCommissionGroups") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/comissionamento/grupos`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "getCommissionGroup") {
+          const commissionGroupId = this.getNodeParameter(
+            "commissionGroupId",
+            itemIndex
+          ) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/comissionamento/grupos/${commissionGroupId}`,
+            headers,
+            json: true,
+          });
+
+          // Operations
+        } else if (operation === "listBanksWithOperations") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/operacoes/bancos`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "searchOperationsByBank") {
+          const bankId = this.getNodeParameter("bankId", itemIndex) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/operacoes/banco/${bankId}`,
+            headers,
+            json: true,
+          });
+
+          // Notifications
+        } else if (operation === "listNotifications") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/notificacoes`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "sendNotification") {
+          const notificationTitle = this.getNodeParameter(
+            "notificationTitle",
+            itemIndex
+          ) as string;
+          const notificationMessage = this.getNodeParameter(
+            "notificationMessage",
+            itemIndex
+          ) as string;
+          const recipientType = this.getNodeParameter(
+            "recipientType",
+            itemIndex
+          ) as string;
+          const recipientId = this.getNodeParameter(
+            "recipientId",
+            itemIndex,
+            ""
+          ) as string;
+
+          const notificationData: any = {
+            titulo: notificationTitle,
+            mensagem: notificationMessage,
+            tipo_destinatario: recipientType,
+          };
+
+          if (recipientId && recipientType !== "all") {
+            notificationData.destinatario_id = recipientId;
+          }
+
+          responseData = await this.helpers.httpRequest({
+            method: "POST",
+            url: `${baseUrl}/api/v2/notificacoes`,
+            headers,
+            body: notificationData,
             json: true,
           });
         }
