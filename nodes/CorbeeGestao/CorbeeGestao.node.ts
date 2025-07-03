@@ -10,7 +10,7 @@ export class CorbeeGestao implements INodeType {
   description: INodeTypeDescription = {
     displayName: "Corbee Gestão",
     name: "corbeeGestao",
-    icon: "fa:users",
+    icon: "file:folder.svg",
     group: ["transform"],
     version: 1,
     description:
