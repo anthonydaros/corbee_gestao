@@ -52,20 +52,16 @@ All operations automatically handle JWT authentication using the configured cred
 ### Credentials Setup
 1. Create new credentials of type "Corbee Gestão API"
 2. Configure:
-   - **Environment**: Choose Demo or Production
+   - **Base URL**: API endpoint (e.g., https://demo.corbee.com.br)
    - **Login**: Your Corbee Gestão username
    - **Password**: Your Corbee Gestão password
-   - **User Type**: Select "Internal User" or "Broker"
-
-### Environment URLs
-- **Demo**: `https://demo.corbee.com.br`
-- **Production**: Configure your production URL
+   - **User Type**: Select "User" or "Corretor"
 
 ## Usage Examples
 
 ### List Brokers
 1. Add CorbeeGestao node
-2. Configure Corbee Gestão API credentials (choose user type: Internal User or Broker)
+2. Configure Corbee Gestão API credentials (choose user type: User or Corretor)
 3. Select "List Brokers" operation
 4. Execute - authentication is handled automatically
 

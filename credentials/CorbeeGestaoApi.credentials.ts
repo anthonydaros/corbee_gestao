@@ -9,46 +9,12 @@ export class CorbeeGestaoApi implements ICredentialType {
 
   properties: INodeProperties[] = [
     {
-      displayName: "Environment",
-      name: "environment",
-      type: "options",
-      options: [
-        {
-          name: "Demo",
-          value: "demo",
-        },
-        {
-          name: "Production",
-          value: "production",
-        },
-      ],
-      default: "demo",
-      description: "Environment to connect to",
-    },
-    {
       displayName: "Base URL",
       name: "baseUrl",
       type: "string",
       default: "https://demo.corbee.com.br",
+      placeholder: "https://demo.corbee.com.br",
       description: "Base URL for the Corbee Gestão API",
-      displayOptions: {
-        show: {
-          environment: ["demo"],
-        },
-      },
-    },
-    {
-      displayName: "Base URL",
-      name: "baseUrl",
-      type: "string",
-      default: "",
-      placeholder: "https://api.corbee.com.br",
-      description: "Base URL for the Corbee Gestão API",
-      displayOptions: {
-        show: {
-          environment: ["production"],
-        },
-      },
     },
     {
       displayName: "Login",
@@ -73,11 +39,11 @@ export class CorbeeGestaoApi implements ICredentialType {
       type: "options",
       options: [
         {
-          name: "Internal User",
+          name: "User",
           value: "interno",
         },
         {
-          name: "Broker",
+          name: "Corretor",
           value: "corretor",
         },
       ],

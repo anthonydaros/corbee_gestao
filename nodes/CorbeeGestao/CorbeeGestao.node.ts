@@ -10,7 +10,7 @@ export class CorbeeGestao implements INodeType {
   description: INodeTypeDescription = {
     displayName: "Corbee Gestão",
     name: "corbeeGestao",
-    icon: "fa:building",
+    icon: "fa:users",
     group: ["transform"],
     version: 1,
     description:
@@ -543,10 +543,7 @@ export class CorbeeGestao implements INodeType {
         item = items[itemIndex];
 
         const credentials = await this.getCredentials("corbeeGestaoApi");
-        const baseUrl =
-          credentials.environment === "demo"
-            ? "https://demo.corbee.com.br"
-            : (credentials.baseUrl as string);
+        const baseUrl = credentials.baseUrl as string;
 
         // Get JWT token first for all operations
         const authResponse = await this.helpers.httpRequest({
