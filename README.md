@@ -16,18 +16,15 @@ An n8n community node for integrating with Corbee Gestão API, providing compreh
 npm install @devanthonymax/n8n-nodes-corbeegestao
 ```
 
-## Nodes Included
+## Node Included
 
-### CorbeeGestaoUsuario
-Consolidated node providing:
-- Authentication operations
+### CorbeeGestao
+Single unified node providing:
 - Broker CRUD (create, get, list, update)
 - User management (create, update, get, list simplified)
 - Profile management (list profiles, get profile details)
 - Manager operations (list managers)
-
-### CorbeeGestaoCorretor
-Simple broker authentication node for quick access.
+- Authentication automatically handled based on credential configuration
 
 ## Operations Available
 
@@ -67,8 +64,8 @@ All operations automatically handle JWT authentication using the configured cred
 ## Usage Examples
 
 ### List Brokers
-1. Add CorbeeGestaoUsuario node
-2. Configure Corbee Gestão API credentials
+1. Add CorbeeGestao node
+2. Configure Corbee Gestão API credentials (choose user type: Internal User or Broker)
 3. Select "List Brokers" operation
 4. Execute - authentication is handled automatically
 

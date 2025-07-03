@@ -6,16 +6,17 @@ import type {
 } from "n8n-workflow";
 import { NodeConnectionType, NodeOperationError } from "n8n-workflow";
 
-export class CorbeeGestaoUsuario implements INodeType {
+export class CorbeeGestao implements INodeType {
   description: INodeTypeDescription = {
-    displayName: "Corbee Gestão Usuario",
-    name: "corbeeGestaoUsuario",
+    displayName: "Corbee Gestão",
+    name: "corbeeGestao",
     icon: "file:archive.svg",
     group: ["transform"],
     version: 1,
-    description: "Corbee Gestão API - User and Broker Operations",
+    description:
+      "Corbee Gestão API - Complete Integration for Users and Brokers",
     defaults: {
-      name: "Corbee Gestão Usuario",
+      name: "Corbee Gestão",
     },
     inputs: [NodeConnectionType.Main],
     outputs: [NodeConnectionType.Main],
