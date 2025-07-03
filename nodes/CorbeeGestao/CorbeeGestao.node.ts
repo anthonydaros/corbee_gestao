@@ -100,8 +100,302 @@ export class CorbeeGestao implements INodeType {
             description: "Get simplified list of all active users",
             action: "List users simplified",
           },
+
+          // Proposal Operations
+          {
+            name: "Create FGTS Proposal",
+            value: "createFgtsProposal",
+            description: "Register new FGTS proposal",
+            action: "Create FGTS proposal",
+          },
+          {
+            name: "Submit Proposal to Bank",
+            value: "submitProposalToBank",
+            description: "Submit proposal for bank processing",
+            action: "Submit proposal to bank",
+          },
+          {
+            name: "Create Proposal",
+            value: "createProposal",
+            description:
+              "Create new proposal (requires broker if internal user)",
+            action: "Create proposal",
+          },
+          {
+            name: "Upload Proposal Documents",
+            value: "uploadProposalDocs",
+            description: "Upload documents for proposal",
+            action: "Upload proposal documents",
+          },
+          {
+            name: "Add Broker Observation",
+            value: "addBrokerObservation",
+            description: "Add broker observation to proposal",
+            action: "Add broker observation",
+          },
+          {
+            name: "Search Proposals",
+            value: "searchProposals",
+            description: "Search proposals with filters",
+            action: "Search proposals",
+          },
+          {
+            name: "Get Proposal Logs",
+            value: "getProposalLogs",
+            description: "Get action logs for proposal",
+            action: "Get proposal logs",
+          },
+          {
+            name: "List Proposal Status",
+            value: "listProposalStatus",
+            description: "List available proposal status",
+            action: "List proposal status",
+          },
+          {
+            name: "List Bank Status",
+            value: "listBankStatus",
+            description: "List available bank status",
+            action: "List bank status",
+          },
+          {
+            name: "Update Proposal Status",
+            value: "updateProposalStatus",
+            description: "Update proposal status",
+            action: "Update proposal status",
+          },
+          {
+            name: "Update Bank Status",
+            value: "updateBankStatus",
+            description: "Update bank status",
+            action: "Update bank status",
+          },
+          {
+            name: "Change Proposal PMT",
+            value: "changeProposalPmt",
+            description: "Change PMT of proposal",
+            action: "Change proposal PMT",
+          },
+          {
+            name: "Remove Proposal PMT",
+            value: "removeProposalPmt",
+            description: "Remove PMT from proposal",
+            action: "Remove proposal PMT",
+          },
+          {
+            name: "Get Broker Observations",
+            value: "getBrokerObservations",
+            description: "Get broker observations for proposal",
+            action: "Get broker observations",
+          },
+          {
+            name: "Set Portability Balance",
+            value: "setPortabilityBalance",
+            description: "Set portability balance received from bank",
+            action: "Set portability balance",
+          },
+          {
+            name: "List Cancellation Types",
+            value: "listCancellationTypes",
+            description: "List available cancellation types",
+            action: "List cancellation types",
+          },
+          {
+            name: "List Proposal Files",
+            value: "listProposalFiles",
+            description: "List files attached to proposal",
+            action: "List proposal files",
+          },
+          {
+            name: "Download Proposal File",
+            value: "downloadProposalFile",
+            description: "Download proposal file in base64",
+            action: "Download proposal file",
+          },
         ],
         default: "createBroker",
+      },
+
+      // Proposal ID field
+      {
+        displayName: "Proposal ID",
+        name: "proposalId",
+        type: "string",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: [
+              "submitProposalToBank",
+              "uploadProposalDocs",
+              "addBrokerObservation",
+              "getProposalLogs",
+              "updateProposalStatus",
+              "updateBankStatus",
+              "changeProposalPmt",
+              "removeProposalPmt",
+              "getBrokerObservations",
+              "setPortabilityBalance",
+              "listProposalFiles",
+              "downloadProposalFile",
+            ],
+          },
+        },
+        default: "",
+        description: "The ID of the proposal",
+      },
+
+      // File ID field for download
+      {
+        displayName: "File ID",
+        name: "fileId",
+        type: "string",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["downloadProposalFile"],
+          },
+        },
+        default: "",
+        description: "The ID of the file to download",
+      },
+
+      // Broker field for proposals (required for internal users)
+      {
+        displayName: "Broker ID",
+        name: "brokerIdForProposal",
+        type: "string",
+        displayOptions: {
+          show: {
+            operation: ["createProposal", "createFgtsProposal"],
+          },
+        },
+        default: "",
+        description: "Broker ID (required if logged user is internal type)",
+      },
+
+      // Observation field
+      {
+        displayName: "Observation",
+        name: "observation",
+        type: "string",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["addBrokerObservation"],
+          },
+        },
+        default: "",
+        description: "Broker observation to add to the proposal",
+      },
+
+      // Status fields
+      {
+        displayName: "Status ID",
+        name: "statusId",
+        type: "string",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["updateProposalStatus", "updateBankStatus"],
+          },
+        },
+        default: "",
+        description: "New status ID to update",
+      },
+
+      // PMT field
+      {
+        displayName: "New PMT Value",
+        name: "pmtValue",
+        type: "number",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["changeProposalPmt"],
+          },
+        },
+        default: 0,
+        description: "New PMT value for the proposal",
+      },
+
+      // Portability balance field
+      {
+        displayName: "Portability Balance",
+        name: "portabilityBalance",
+        type: "number",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["setPortabilityBalance"],
+          },
+        },
+        default: 0,
+        description: "Portability balance received from bank",
+      },
+
+      // Search filters
+      {
+        displayName: "CPF",
+        name: "searchCpf",
+        type: "string",
+        displayOptions: {
+          show: {
+            operation: ["searchProposals"],
+          },
+        },
+        default: "",
+        description: "CPF for proposal search",
+      },
+      {
+        displayName: "Proposal Code",
+        name: "proposalCode",
+        type: "string",
+        displayOptions: {
+          show: {
+            operation: ["searchProposals"],
+          },
+        },
+        default: "",
+        description: "Proposal code for search",
+      },
+      {
+        displayName: "Client Name",
+        name: "clientName",
+        type: "string",
+        displayOptions: {
+          show: {
+            operation: ["searchProposals"],
+          },
+        },
+        default: "",
+        description: "Client name for proposal search",
+      },
+
+      // File upload field
+      {
+        displayName: "Document File",
+        name: "documentFile",
+        type: "string",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["uploadProposalDocs"],
+          },
+        },
+        default: "",
+        description: "Base64 encoded document file",
+      },
+      {
+        displayName: "Document Type",
+        name: "documentType",
+        type: "string",
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ["uploadProposalDocs"],
+          },
+        },
+        default: "",
+        description: "Type of document being uploaded",
       },
 
       // Broker ID field
@@ -819,6 +1113,294 @@ export class CorbeeGestao implements INodeType {
           responseData = await this.helpers.httpRequest({
             method: "GET",
             url: `${baseUrl}/api/v2/usuarios/simplificado`,
+            headers,
+            json: true,
+          });
+
+          // Proposal Operations
+        } else if (operation === "createFgtsProposal") {
+          const proposalData: any = {};
+
+          // Add broker if provided (required for internal users)
+          const brokerIdForProposal = this.getNodeParameter(
+            "brokerIdForProposal",
+            itemIndex,
+            ""
+          ) as string;
+          if (brokerIdForProposal) proposalData.corretor = brokerIdForProposal;
+
+          responseData = await this.helpers.httpRequest({
+            method: "POST",
+            url: `${baseUrl}/api/v2/proposta/fgts`,
+            headers,
+            body: proposalData,
+            json: true,
+          });
+        } else if (operation === "submitProposalToBank") {
+          const proposalId = this.getNodeParameter(
+            "proposalId",
+            itemIndex
+          ) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "POST",
+            url: `${baseUrl}/api/v2/proposta/${proposalId}/digitar-banco`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "createProposal") {
+          const proposalData: any = {};
+
+          // Add broker if provided (required for internal users)
+          const brokerIdForProposal = this.getNodeParameter(
+            "brokerIdForProposal",
+            itemIndex,
+            ""
+          ) as string;
+          if (brokerIdForProposal) proposalData.corretor = brokerIdForProposal;
+
+          responseData = await this.helpers.httpRequest({
+            method: "POST",
+            url: `${baseUrl}/api/v2/proposta`,
+            headers,
+            body: proposalData,
+            json: true,
+          });
+        } else if (operation === "uploadProposalDocs") {
+          const proposalId = this.getNodeParameter(
+            "proposalId",
+            itemIndex
+          ) as string;
+          const documentFile = this.getNodeParameter(
+            "documentFile",
+            itemIndex
+          ) as string;
+          const documentType = this.getNodeParameter(
+            "documentType",
+            itemIndex
+          ) as string;
+
+          const uploadData = {
+            arquivo: documentFile,
+            tipo: documentType,
+          };
+
+          responseData = await this.helpers.httpRequest({
+            method: "POST",
+            url: `${baseUrl}/api/v2/proposta/${proposalId}/documentos`,
+            headers,
+            body: uploadData,
+            json: true,
+          });
+        } else if (operation === "addBrokerObservation") {
+          const proposalId = this.getNodeParameter(
+            "proposalId",
+            itemIndex
+          ) as string;
+          const observation = this.getNodeParameter(
+            "observation",
+            itemIndex
+          ) as string;
+
+          const observationData = {
+            observacao: observation,
+          };
+
+          responseData = await this.helpers.httpRequest({
+            method: "POST",
+            url: `${baseUrl}/api/v2/proposta/${proposalId}/observacao-corretor`,
+            headers,
+            body: observationData,
+            json: true,
+          });
+        } else if (operation === "searchProposals") {
+          const searchParams: any = {};
+
+          const searchCpf = this.getNodeParameter(
+            "searchCpf",
+            itemIndex,
+            ""
+          ) as string;
+          if (searchCpf) searchParams.cpf = searchCpf;
+
+          const proposalCode = this.getNodeParameter(
+            "proposalCode",
+            itemIndex,
+            ""
+          ) as string;
+          if (proposalCode) searchParams.codigo = proposalCode;
+
+          const clientName = this.getNodeParameter(
+            "clientName",
+            itemIndex,
+            ""
+          ) as string;
+          if (clientName) searchParams.nome = clientName;
+
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/proposta/buscar`,
+            headers,
+            qs: searchParams,
+            json: true,
+          });
+        } else if (operation === "getProposalLogs") {
+          const proposalId = this.getNodeParameter(
+            "proposalId",
+            itemIndex
+          ) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/proposta/${proposalId}/logs`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "listProposalStatus") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/proposta/status`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "listBankStatus") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/proposta/status-banco`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "updateProposalStatus") {
+          const proposalId = this.getNodeParameter(
+            "proposalId",
+            itemIndex
+          ) as string;
+          const statusId = this.getNodeParameter(
+            "statusId",
+            itemIndex
+          ) as string;
+
+          const statusData = {
+            status: statusId,
+          };
+
+          responseData = await this.helpers.httpRequest({
+            method: "PUT",
+            url: `${baseUrl}/api/v2/proposta/${proposalId}/status`,
+            headers,
+            body: statusData,
+            json: true,
+          });
+        } else if (operation === "updateBankStatus") {
+          const proposalId = this.getNodeParameter(
+            "proposalId",
+            itemIndex
+          ) as string;
+          const statusId = this.getNodeParameter(
+            "statusId",
+            itemIndex
+          ) as string;
+
+          const statusData = {
+            status: statusId,
+          };
+
+          responseData = await this.helpers.httpRequest({
+            method: "PUT",
+            url: `${baseUrl}/api/v2/proposta/${proposalId}/status-banco`,
+            headers,
+            body: statusData,
+            json: true,
+          });
+        } else if (operation === "changeProposalPmt") {
+          const proposalId = this.getNodeParameter(
+            "proposalId",
+            itemIndex
+          ) as string;
+          const pmtValue = this.getNodeParameter(
+            "pmtValue",
+            itemIndex
+          ) as number;
+
+          const pmtData = {
+            pmt: pmtValue,
+          };
+
+          responseData = await this.helpers.httpRequest({
+            method: "PUT",
+            url: `${baseUrl}/api/v2/proposta/${proposalId}/pmt`,
+            headers,
+            body: pmtData,
+            json: true,
+          });
+        } else if (operation === "removeProposalPmt") {
+          const proposalId = this.getNodeParameter(
+            "proposalId",
+            itemIndex
+          ) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "DELETE",
+            url: `${baseUrl}/api/v2/proposta/${proposalId}/pmt`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "getBrokerObservations") {
+          const proposalId = this.getNodeParameter(
+            "proposalId",
+            itemIndex
+          ) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/proposta/${proposalId}/observacoes-corretor`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "setPortabilityBalance") {
+          const proposalId = this.getNodeParameter(
+            "proposalId",
+            itemIndex
+          ) as string;
+          const portabilityBalance = this.getNodeParameter(
+            "portabilityBalance",
+            itemIndex
+          ) as number;
+
+          const balanceData = {
+            saldo: portabilityBalance,
+          };
+
+          responseData = await this.helpers.httpRequest({
+            method: "PUT",
+            url: `${baseUrl}/api/v2/proposta/${proposalId}/saldo-portabilidade`,
+            headers,
+            body: balanceData,
+            json: true,
+          });
+        } else if (operation === "listCancellationTypes") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/proposta/tipos-cancelamento`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "listProposalFiles") {
+          const proposalId = this.getNodeParameter(
+            "proposalId",
+            itemIndex
+          ) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/proposta/${proposalId}/arquivos`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "downloadProposalFile") {
+          const proposalId = this.getNodeParameter(
+            "proposalId",
+            itemIndex
+          ) as string;
+          const fileId = this.getNodeParameter("fileId", itemIndex) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/proposta/${proposalId}/arquivo/${fileId}`,
             headers,
             json: true,
           });

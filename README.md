@@ -47,6 +47,26 @@ All operations automatically handle JWT authentication using the configured cred
 - `getProfileDetails` - Get detailed information about a specific profile
 - `listManagers` - List all managers with details
 
+### Proposal Operations
+- `createFgtsProposal` - Register new FGTS proposal
+- `submitProposalToBank` - Submit proposal for bank processing
+- `createProposal` - Create new proposal (requires broker if internal user)
+- `uploadProposalDocs` - Upload documents for proposal
+- `addBrokerObservation` - Add broker observation to proposal
+- `searchProposals` - Search proposals with filters (CPF, code, client name)
+- `getProposalLogs` - Get action logs for proposal
+- `listProposalStatus` - List available proposal status
+- `listBankStatus` - List available bank status
+- `updateProposalStatus` - Update proposal status
+- `updateBankStatus` - Update bank status
+- `changeProposalPmt` - Change PMT of proposal
+- `removeProposalPmt` - Remove PMT from proposal
+- `getBrokerObservations` - Get broker observations for proposal
+- `setPortabilityBalance` - Set portability balance received from bank
+- `listCancellationTypes` - List available cancellation types
+- `listProposalFiles` - List files attached to proposal
+- `downloadProposalFile` - Download proposal file in base64
+
 ## Configuration
 
 ### Credentials Setup
@@ -70,6 +90,13 @@ All operations automatically handle JWT authentication using the configured cred
 2. Use "Create User" with required fields:
    - Login, Name, Email, Profile ID, Password
    - Optional: Phone, CPF, Birth Date, Store ID, Manager ID
+
+### Manage Proposals
+1. Use "Create FGTS Proposal" to register new proposal
+2. Use "Upload Proposal Documents" to attach files
+3. Use "Add Broker Observation" to add notes
+4. Use "Submit Proposal to Bank" when ready
+5. Use "Search Proposals" to find specific proposals by CPF, code, or name
 
 ## API Documentation
 
