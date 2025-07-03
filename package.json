@@ -1,19 +1,24 @@
 {
-	"name": "n8n-nodes-corbee-gestao",
-	"version": "0.1.0",
-	"description": "n8n community node for Corbee Gestão API integration",
+	"name": "@devanthonymax/n8n-nodes-corbeegestao",
+	"version": "1.0.0",
+	"description": "n8n community node for Corbee Gestão API integration - User and Broker management",
 	"keywords": [
-		"n8n-community-node-package"
+		"n8n-community-node-package",
+		"corbee",
+		"gestao",
+		"broker",
+		"user-management",
+		"api-integration"
 	],
 	"license": "MIT",
-	"homepage": "https://github.com/username/n8n-nodes-corbee-gestao",
+	"homepage": "https://github.com/anthonydaros/corbee_gestao",
 	"author": {
-		"name": "Your Name",
-		"email": "your.email@example.com"
+		"name": "Anthony Daros",
+		"email": "devanthonymax@gmail.com"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/username/n8n-nodes-corbee-gestao.git"
+		"url": "git+https://github.com/anthonydaros/corbee_gestao.git"
 	},
 	"engines": {
 		"node": ">=18.10",
@@ -22,12 +27,12 @@
 	"packageManager": "pnpm@8.6.2",
 	"main": "index.js",
 	"scripts": {
-		"build": "tsc && gulp build:icons",
+		"build": "tsc",
 		"dev": "tsc --watch",
 		"format": "prettier nodes credentials --write",
-		"lint": "eslint nodes credentials package.json",
+		"lint": "eslint nodes/**/*.ts credentials/**/*.ts package.json",
 		"lintfix": "eslint nodes credentials package.json --fix",
-		"prepublishOnly": "pnpm run build && pnpm run lint -s"
+		"prepublishOnly": "npm run build && npm run lint"
 	},
 	"files": [
 		"dist"
