@@ -31,8 +31,7 @@ Simple broker authentication node for quick access.
 
 ## Operations Available
 
-### Authentication
-- `authenticate` - Get JWT token for API access
+All operations automatically handle JWT authentication using the configured credentials.
 
 ### Broker Operations
 - `createBroker` - Create new broker with full details
@@ -67,12 +66,11 @@ Simple broker authentication node for quick access.
 
 ## Usage Examples
 
-### Authenticate and List Brokers
+### List Brokers
 1. Add CorbeeGestaoUsuario node
-2. Select "Authenticate" operation
-3. Add another CorbeeGestaoUsuario node
-4. Select "List Brokers" operation
-5. Connect the nodes
+2. Configure Corbee Gestão API credentials
+3. Select "List Brokers" operation
+4. Execute - authentication is handled automatically
 
 ### Create New User
 1. Use "List Profiles" to get available profiles

@@ -33,12 +33,6 @@ export class CorbeeGestaoUsuario implements INodeType {
         noDataExpression: true,
         options: [
           {
-            name: "Authenticate",
-            value: "authenticate",
-            description: "Authenticate and get JWT token",
-            action: "Authenticate user",
-          },
-          {
             name: "Create Broker",
             value: "createBroker",
             description: "Create a new broker",
@@ -105,7 +99,7 @@ export class CorbeeGestaoUsuario implements INodeType {
             action: "List users simplified",
           },
         ],
-        default: "authenticate",
+        default: "createBroker",
       },
 
       // Broker ID field
@@ -552,299 +546,283 @@ export class CorbeeGestaoUsuario implements INodeType {
             ? "https://demo.corbee.com.br"
             : (credentials.baseUrl as string);
 
+        // Get JWT token first for all operations
+        const authResponse = await this.helpers.httpRequest({
+          method: "POST",
+          url: `${baseUrl}/api/v2/login`,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: {
+            login: credentials.login,
+            senha: credentials.senha,
+            type_user: credentials.type_user,
+          },
+          json: true,
+        });
+
+        if (!authResponse.data?.jwt) {
+          throw new NodeOperationError(
+            this.getNode(),
+            "Authentication failed: No JWT token received",
+            {
+              itemIndex,
+            }
+          );
+        }
+
+        const jwt = authResponse.data.jwt;
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        };
+
         let responseData: any;
 
-        if (operation === "authenticate") {
-          responseData = await this.helpers.httpRequest({
-            method: "POST",
-            url: `${baseUrl}/api/v2/login`,
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: {
-              login: credentials.login,
-              senha: credentials.senha,
-              type_user: credentials.type_user,
-            },
-            json: true,
-          });
-        } else {
-          // Get JWT token first for authenticated operations
-          const authResponse = await this.helpers.httpRequest({
-            method: "POST",
-            url: `${baseUrl}/api/v2/login`,
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: {
-              login: credentials.login,
-              senha: credentials.senha,
-              type_user: credentials.type_user,
-            },
-            json: true,
-          });
+        if (operation === "createBroker") {
+          const brokerData: any = {
+            login: this.getNodeParameter("login", itemIndex),
+            cpf: this.getNodeParameter("cpf", itemIndex),
+            nome: this.getNodeParameter("nome", itemIndex),
+            email: this.getNodeParameter("email", itemIndex),
+            telefone: this.getNodeParameter("telefone", itemIndex),
+            dtNascimento: this.getNodeParameter("dtNascimento", itemIndex),
+            tipoCorretor: this.getNodeParameter("tipoCorretor", itemIndex),
+            loja: this.getNodeParameter("loja", itemIndex),
+            logradouro: this.getNodeParameter("logradouro", itemIndex),
+            numero: this.getNodeParameter("numero", itemIndex),
+            bairro: this.getNodeParameter("bairro", itemIndex),
+            cidade: this.getNodeParameter("cidade", itemIndex),
+            estado: this.getNodeParameter("estado", itemIndex),
+            cep: this.getNodeParameter("cep", itemIndex),
+            gerente: this.getNodeParameter("gerente", itemIndex),
+            idCentroCusto: this.getNodeParameter("idCentroCusto", itemIndex),
+            recebimento: this.getNodeParameter("recebimento", itemIndex),
+            permissoes: this.getNodeParameter("permissoes", itemIndex),
+          };
 
-          if (!authResponse.data?.jwt) {
-            throw new NodeOperationError(
-              this.getNode(),
-              "Authentication failed: No JWT token received",
-              {
-                itemIndex,
-              }
+          // Add PJ specific fields if needed
+          const tipoCorretor = this.getNodeParameter(
+            "tipoCorretor",
+            itemIndex
+          ) as string;
+          if (tipoCorretor === "pj") {
+            brokerData.cnpj = this.getNodeParameter("cnpj", itemIndex);
+            brokerData.razaoSocial = this.getNodeParameter(
+              "razaoSocial",
+              itemIndex
             );
           }
 
-          const jwt = authResponse.data.jwt;
-          const headers = {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwt}`,
+          responseData = await this.helpers.httpRequest({
+            method: "POST",
+            url: `${baseUrl}/api/v2/broker`,
+            headers,
+            body: brokerData,
+            json: true,
+          });
+        } else if (operation === "getBroker") {
+          const brokerId = this.getNodeParameter(
+            "brokerId",
+            itemIndex
+          ) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/broker/${brokerId}`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "listBrokers") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/broker/list`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "updateBroker") {
+          const updateBrokerId = this.getNodeParameter(
+            "brokerId",
+            itemIndex
+          ) as string;
+          const updateBrokerData: any = {
+            login: this.getNodeParameter("login", itemIndex),
+            cpf: this.getNodeParameter("cpf", itemIndex),
+            nome: this.getNodeParameter("nome", itemIndex),
+            email: this.getNodeParameter("email", itemIndex),
+            telefone: this.getNodeParameter("telefone", itemIndex),
+            dtNascimento: this.getNodeParameter("dtNascimento", itemIndex),
+            tipoCorretor: this.getNodeParameter("tipoCorretor", itemIndex),
+            loja: this.getNodeParameter("loja", itemIndex),
+            logradouro: this.getNodeParameter("logradouro", itemIndex),
+            numero: this.getNodeParameter("numero", itemIndex),
+            bairro: this.getNodeParameter("bairro", itemIndex),
+            cidade: this.getNodeParameter("cidade", itemIndex),
+            estado: this.getNodeParameter("estado", itemIndex),
+            cep: this.getNodeParameter("cep", itemIndex),
+            gerente: this.getNodeParameter("gerente", itemIndex),
+            idCentroCusto: this.getNodeParameter("idCentroCusto", itemIndex),
+            recebimento: this.getNodeParameter("recebimento", itemIndex),
+            permissoes: this.getNodeParameter("permissoes", itemIndex),
           };
 
-          if (operation === "createBroker") {
-            const brokerData: any = {
-              login: this.getNodeParameter("login", itemIndex),
-              cpf: this.getNodeParameter("cpf", itemIndex),
-              nome: this.getNodeParameter("nome", itemIndex),
-              email: this.getNodeParameter("email", itemIndex),
-              telefone: this.getNodeParameter("telefone", itemIndex),
-              dtNascimento: this.getNodeParameter("dtNascimento", itemIndex),
-              tipoCorretor: this.getNodeParameter("tipoCorretor", itemIndex),
-              loja: this.getNodeParameter("loja", itemIndex),
-              logradouro: this.getNodeParameter("logradouro", itemIndex),
-              numero: this.getNodeParameter("numero", itemIndex),
-              bairro: this.getNodeParameter("bairro", itemIndex),
-              cidade: this.getNodeParameter("cidade", itemIndex),
-              estado: this.getNodeParameter("estado", itemIndex),
-              cep: this.getNodeParameter("cep", itemIndex),
-              gerente: this.getNodeParameter("gerente", itemIndex),
-              idCentroCusto: this.getNodeParameter("idCentroCusto", itemIndex),
-              recebimento: this.getNodeParameter("recebimento", itemIndex),
-              permissoes: this.getNodeParameter("permissoes", itemIndex),
-            };
-
-            // Add PJ specific fields if needed
-            const tipoCorretor = this.getNodeParameter(
-              "tipoCorretor",
+          // Add PJ specific fields if needed
+          const updateTipoCorretor = this.getNodeParameter(
+            "tipoCorretor",
+            itemIndex
+          ) as string;
+          if (updateTipoCorretor === "pj") {
+            updateBrokerData.cnpj = this.getNodeParameter("cnpj", itemIndex);
+            updateBrokerData.razaoSocial = this.getNodeParameter(
+              "razaoSocial",
               itemIndex
-            ) as string;
-            if (tipoCorretor === "pj") {
-              brokerData.cnpj = this.getNodeParameter("cnpj", itemIndex);
-              brokerData.razaoSocial = this.getNodeParameter(
-                "razaoSocial",
-                itemIndex
-              );
-            }
-
-            responseData = await this.helpers.httpRequest({
-              method: "POST",
-              url: `${baseUrl}/api/v2/broker`,
-              headers,
-              body: brokerData,
-              json: true,
-            });
-          } else if (operation === "getBroker") {
-            const brokerId = this.getNodeParameter(
-              "brokerId",
-              itemIndex
-            ) as string;
-            responseData = await this.helpers.httpRequest({
-              method: "GET",
-              url: `${baseUrl}/api/v2/broker/${brokerId}`,
-              headers,
-              json: true,
-            });
-          } else if (operation === "listBrokers") {
-            responseData = await this.helpers.httpRequest({
-              method: "GET",
-              url: `${baseUrl}/api/v2/broker/list`,
-              headers,
-              json: true,
-            });
-          } else if (operation === "updateBroker") {
-            const updateBrokerId = this.getNodeParameter(
-              "brokerId",
-              itemIndex
-            ) as string;
-            const updateBrokerData: any = {
-              login: this.getNodeParameter("login", itemIndex),
-              cpf: this.getNodeParameter("cpf", itemIndex),
-              nome: this.getNodeParameter("nome", itemIndex),
-              email: this.getNodeParameter("email", itemIndex),
-              telefone: this.getNodeParameter("telefone", itemIndex),
-              dtNascimento: this.getNodeParameter("dtNascimento", itemIndex),
-              tipoCorretor: this.getNodeParameter("tipoCorretor", itemIndex),
-              loja: this.getNodeParameter("loja", itemIndex),
-              logradouro: this.getNodeParameter("logradouro", itemIndex),
-              numero: this.getNodeParameter("numero", itemIndex),
-              bairro: this.getNodeParameter("bairro", itemIndex),
-              cidade: this.getNodeParameter("cidade", itemIndex),
-              estado: this.getNodeParameter("estado", itemIndex),
-              cep: this.getNodeParameter("cep", itemIndex),
-              gerente: this.getNodeParameter("gerente", itemIndex),
-              idCentroCusto: this.getNodeParameter("idCentroCusto", itemIndex),
-              recebimento: this.getNodeParameter("recebimento", itemIndex),
-              permissoes: this.getNodeParameter("permissoes", itemIndex),
-            };
-
-            // Add PJ specific fields if needed
-            const updateTipoCorretor = this.getNodeParameter(
-              "tipoCorretor",
-              itemIndex
-            ) as string;
-            if (updateTipoCorretor === "pj") {
-              updateBrokerData.cnpj = this.getNodeParameter("cnpj", itemIndex);
-              updateBrokerData.razaoSocial = this.getNodeParameter(
-                "razaoSocial",
-                itemIndex
-              );
-            }
-
-            responseData = await this.helpers.httpRequest({
-              method: "PUT",
-              url: `${baseUrl}/api/v2/broker/${updateBrokerId}`,
-              headers,
-              body: updateBrokerData,
-              json: true,
-            });
-          } else if (operation === "listProfiles") {
-            responseData = await this.helpers.httpRequest({
-              method: "GET",
-              url: `${baseUrl}/api/v2/perfis`,
-              headers,
-              json: true,
-            });
-          } else if (operation === "getProfileDetails") {
-            const profileId = this.getNodeParameter(
-              "profileId",
-              itemIndex
-            ) as string;
-            responseData = await this.helpers.httpRequest({
-              method: "GET",
-              url: `${baseUrl}/api/v2/perfis/${profileId}`,
-              headers,
-              json: true,
-            });
-          } else if (operation === "listManagers") {
-            responseData = await this.helpers.httpRequest({
-              method: "GET",
-              url: `${baseUrl}/api/v2/gerentes`,
-              headers,
-              json: true,
-            });
-          } else if (operation === "createUser") {
-            const userData: any = {
-              login: this.getNodeParameter("login", itemIndex),
-              nome: this.getNodeParameter("nome", itemIndex),
-              email: this.getNodeParameter("email", itemIndex),
-              perfilId: this.getNodeParameter("perfilId", itemIndex),
-              senha: this.getNodeParameter("senha", itemIndex),
-              status: this.getNodeParameter("status", itemIndex, "ativo"),
-            };
-
-            // Add optional fields if provided
-            const telefone = this.getNodeParameter(
-              "telefone",
-              itemIndex,
-              ""
-            ) as string;
-            if (telefone) userData.telefone = telefone;
-
-            const cpf = this.getNodeParameter("cpf", itemIndex, "") as string;
-            if (cpf) userData.cpf = cpf;
-
-            const dtNascimento = this.getNodeParameter(
-              "dtNascimento",
-              itemIndex,
-              ""
-            ) as string;
-            if (dtNascimento) userData.dtNascimento = dtNascimento;
-
-            const lojaId = this.getNodeParameter(
-              "lojaId",
-              itemIndex,
-              ""
-            ) as string;
-            if (lojaId) userData.lojaId = lojaId;
-
-            const gerenteId = this.getNodeParameter(
-              "gerenteId",
-              itemIndex,
-              ""
-            ) as string;
-            if (gerenteId) userData.gerenteId = gerenteId;
-
-            responseData = await this.helpers.httpRequest({
-              method: "POST",
-              url: `${baseUrl}/api/v2/usuarios`,
-              headers,
-              body: userData,
-              json: true,
-            });
-          } else if (operation === "updateUser") {
-            const userId = this.getNodeParameter("userId", itemIndex) as string;
-            const updateUserData: any = {
-              login: this.getNodeParameter("login", itemIndex),
-              nome: this.getNodeParameter("nome", itemIndex),
-              email: this.getNodeParameter("email", itemIndex),
-              perfilId: this.getNodeParameter("perfilId", itemIndex),
-              status: this.getNodeParameter("status", itemIndex, "ativo"),
-            };
-
-            // Add optional fields if provided
-            const telefone = this.getNodeParameter(
-              "telefone",
-              itemIndex,
-              ""
-            ) as string;
-            if (telefone) updateUserData.telefone = telefone;
-
-            const cpf = this.getNodeParameter("cpf", itemIndex, "") as string;
-            if (cpf) updateUserData.cpf = cpf;
-
-            const dtNascimento = this.getNodeParameter(
-              "dtNascimento",
-              itemIndex,
-              ""
-            ) as string;
-            if (dtNascimento) updateUserData.dtNascimento = dtNascimento;
-
-            const lojaId = this.getNodeParameter(
-              "lojaId",
-              itemIndex,
-              ""
-            ) as string;
-            if (lojaId) updateUserData.lojaId = lojaId;
-
-            const gerenteId = this.getNodeParameter(
-              "gerenteId",
-              itemIndex,
-              ""
-            ) as string;
-            if (gerenteId) updateUserData.gerenteId = gerenteId;
-
-            responseData = await this.helpers.httpRequest({
-              method: "PUT",
-              url: `${baseUrl}/api/v2/usuarios/${userId}`,
-              headers,
-              body: updateUserData,
-              json: true,
-            });
-          } else if (operation === "getUserData") {
-            const userId = this.getNodeParameter("userId", itemIndex) as string;
-            responseData = await this.helpers.httpRequest({
-              method: "GET",
-              url: `${baseUrl}/api/v2/usuarios/${userId}`,
-              headers,
-              json: true,
-            });
-          } else if (operation === "listUsersSimplified") {
-            responseData = await this.helpers.httpRequest({
-              method: "GET",
-              url: `${baseUrl}/api/v2/usuarios/simplificado`,
-              headers,
-              json: true,
-            });
+            );
           }
+
+          responseData = await this.helpers.httpRequest({
+            method: "PUT",
+            url: `${baseUrl}/api/v2/broker/${updateBrokerId}`,
+            headers,
+            body: updateBrokerData,
+            json: true,
+          });
+        } else if (operation === "listProfiles") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/perfis`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "getProfileDetails") {
+          const profileId = this.getNodeParameter(
+            "profileId",
+            itemIndex
+          ) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/perfis/${profileId}`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "listManagers") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/gerentes`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "createUser") {
+          const userData: any = {
+            login: this.getNodeParameter("login", itemIndex),
+            nome: this.getNodeParameter("nome", itemIndex),
+            email: this.getNodeParameter("email", itemIndex),
+            perfilId: this.getNodeParameter("perfilId", itemIndex),
+            senha: this.getNodeParameter("senha", itemIndex),
+            status: this.getNodeParameter("status", itemIndex, "ativo"),
+          };
+
+          // Add optional fields if provided
+          const telefone = this.getNodeParameter(
+            "telefone",
+            itemIndex,
+            ""
+          ) as string;
+          if (telefone) userData.telefone = telefone;
+
+          const cpf = this.getNodeParameter("cpf", itemIndex, "") as string;
+          if (cpf) userData.cpf = cpf;
+
+          const dtNascimento = this.getNodeParameter(
+            "dtNascimento",
+            itemIndex,
+            ""
+          ) as string;
+          if (dtNascimento) userData.dtNascimento = dtNascimento;
+
+          const lojaId = this.getNodeParameter(
+            "lojaId",
+            itemIndex,
+            ""
+          ) as string;
+          if (lojaId) userData.lojaId = lojaId;
+
+          const gerenteId = this.getNodeParameter(
+            "gerenteId",
+            itemIndex,
+            ""
+          ) as string;
+          if (gerenteId) userData.gerenteId = gerenteId;
+
+          responseData = await this.helpers.httpRequest({
+            method: "POST",
+            url: `${baseUrl}/api/v2/usuarios`,
+            headers,
+            body: userData,
+            json: true,
+          });
+        } else if (operation === "updateUser") {
+          const userId = this.getNodeParameter("userId", itemIndex) as string;
+          const updateUserData: any = {
+            login: this.getNodeParameter("login", itemIndex),
+            nome: this.getNodeParameter("nome", itemIndex),
+            email: this.getNodeParameter("email", itemIndex),
+            perfilId: this.getNodeParameter("perfilId", itemIndex),
+            status: this.getNodeParameter("status", itemIndex, "ativo"),
+          };
+
+          // Add optional fields if provided
+          const telefone = this.getNodeParameter(
+            "telefone",
+            itemIndex,
+            ""
+          ) as string;
+          if (telefone) updateUserData.telefone = telefone;
+
+          const cpf = this.getNodeParameter("cpf", itemIndex, "") as string;
+          if (cpf) updateUserData.cpf = cpf;
+
+          const dtNascimento = this.getNodeParameter(
+            "dtNascimento",
+            itemIndex,
+            ""
+          ) as string;
+          if (dtNascimento) updateUserData.dtNascimento = dtNascimento;
+
+          const lojaId = this.getNodeParameter(
+            "lojaId",
+            itemIndex,
+            ""
+          ) as string;
+          if (lojaId) updateUserData.lojaId = lojaId;
+
+          const gerenteId = this.getNodeParameter(
+            "gerenteId",
+            itemIndex,
+            ""
+          ) as string;
+          if (gerenteId) updateUserData.gerenteId = gerenteId;
+
+          responseData = await this.helpers.httpRequest({
+            method: "PUT",
+            url: `${baseUrl}/api/v2/usuarios/${userId}`,
+            headers,
+            body: updateUserData,
+            json: true,
+          });
+        } else if (operation === "getUserData") {
+          const userId = this.getNodeParameter("userId", itemIndex) as string;
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/usuarios/${userId}`,
+            headers,
+            json: true,
+          });
+        } else if (operation === "listUsersSimplified") {
+          responseData = await this.helpers.httpRequest({
+            method: "GET",
+            url: `${baseUrl}/api/v2/usuarios/simplificado`,
+            headers,
+            json: true,
+          });
         }
 
         // Following ExampleNode pattern - modify the item directly
